@@ -1,0 +1,16 @@
+{
+    "fnd0_tcAdminPassword": "infodba",
+    "fnd0_corporateserver_osUserPassword": "nopassword",
+    "fnd0_oracleDBUserPassword": "S4S8XLJB8Z.vclabkwn+e=6518",
+    "fnd0_fsc_machinePassword": "nopassword",
+    "fnd0_j2ee_tcwebtiertrustStorePassword": "nopassword",
+    "fnd0_serverManagerOracleDBUserPassword": "123abcABC!?%NIMDABVPuSeMuK",
+    "fnd0_microservice_keyStorePassword": "smoTc50123",
+    "aws2_indexingEngineUserPassword": "solr_admin@123",
+    "aws2_machinePassword": "KjY3rBR3j*9DA3%HAY+kqqGYfo",
+    "fnd0_dispatcherclientProxyPassword":"Dcproxy123",
+    "fnd0_TcPassword4TcIF":"infodba",
+    "fnd0_TcIFUserPassword":"IFAdmin123Nc",
+    "MachineUserPassword": "nopassword",
+	"fnd0_embeddedLDAPKeyStorePassword": "nopassword"
+}

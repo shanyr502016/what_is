@@ -1,0 +1,16 @@
+{
+    "fnd0_tcAdminPassword": "infodba",
+    "fnd0_corporateserver_osUserPassword": "nopassword",
+    "fnd0_oracleDBUserPassword": "123abcABC!?%NIMDABVPuSeMuK",
+    "fnd0_fsc_machinePassword": "nopassword",
+    "fnd0_j2ee_tcwebtiertrustStorePassword": "nopassword",
+    "fnd0_serverManagerOracleDBUserPassword": "123abcABC!?%abdofniNIMDABV",
+    "fnd0_microservice_keyStorePassword": "tcsmod10_master",
+    "aws2_indexingEngineUserPassword": "tcsmod10_solr",
+    "aws2_machinePassword": "KjY3rBR3j*9DA3%HAY+kqqGYfo",
+    "fnd0_dispatcherclientProxyPassword": "dcproxy",
+    "fnd0_TcPassword4TcIF": "infodba",
+    "fnd0_TcIFUserPassword": "admin",
+    "MachineUserPassword": "nopassword",
+	"fnd0_embeddedLDAPKeyStorePassword": "nopassword"
+}

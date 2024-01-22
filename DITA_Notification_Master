@@ -1,0 +1,107 @@
+/**
+    __description__     = 'This Job is designed to provide a user friendly Interface to easy access of Python Framework for PLM based Teamcenter Modules deployments.'
+    __author__          = 'Raghulraj Palanisamy & Asawari Deshpande'
+    __copyright__       = "© Copyright Siemens. All rights reserved"
+    __version__         = 0.1
+
+ */
+@Library('DITACI')_
+import com.lib.GlobalVars
+import com.lib.Utilities
+
+String AGENT_SERVER_TO_DEPLOY = null
+String AGENT_JENKINS_TO_SERVER_LNX = 'demchdc47xx'
+String DITA_SCRIPTS_PATH = ""
+String DITA_MANAGE_SCRIPTS = ""
+String DITA_DEPLOY_SCRIPTS = ""
+String DEPLOYMENT_OPTION = ""
+def downtime = '-'
+def resourcesConfig = null
+def parametersConfig = null
+def branchesConfig = null
+def targetNode = null
+def utils = null
+String currentBuidWorkspace = null
+
+String INCOMING_WEBHOOK_URL = ""
+/* Pipeline JOB Setup required configurations */
+pipeline
+{
+    agent {
+        label AGENT_JENKINS_TO_SERVER_LNX
+    }
+    environment {
+        currentBuidWorkspace = ''
+    }
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        timeout(time: 300, unit: 'MINUTES')
+        ansiColor('xterm')
+        // disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('Checkout Deployment Framework from SMO_CI-CD') {
+            steps {
+                script {
+                    echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out  ]======== ]'
+                    cleanWs()
+                    git branch: 'ci-cd-dev',
+                    credentialsId: 'infodbaat47xx',
+                    url: 'git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/smo_ci-cd.git',
+                    changelog: false,
+                    poll: false
+                    currentBuidWorkspace = WORKSPACE
+                }
+            }
+            post {
+                    success {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project executed successfully ]======== ]'
+                    }
+                    failure {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project execution failed ]======== ]'
+                        // notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                    }
+            }
+        }
+
+       
+        stage ('Teams Notification') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            steps {
+                script {
+                    echo "[DEBUG INFO] Send Teams Notification to "
+
+                    if (params.containsKey("INCOMING_WEBGHOOK_URL") && params.containsKey("TEAMS_MESSAGE")) { // SOFTWARE_VERSION Get from Parent Job (DITA_BuildDeployTest)
+                        echo "[DEBUG INFO] INCOMING_WEBGHOOK_URL from Parent Job: ${params.INCOMING_WEBGHOOK_URL}"
+                        def INCOMING_WEBGHOOK_URL = params.INCOMING_WEBGHOOK_URL.split(',')
+                        print(params.TEAMS_MESSAGE)
+                        INCOMING_WEBGHOOK_URL.each { webhookurl ->
+                            httpRequest (consoleLogResponseBody: true, contentType: 'APPLICATION_JSON', httpMode: 'POST', requestBody: params.TEAMS_MESSAGE, url: webhookurl, validResponseCodes: '200')
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}

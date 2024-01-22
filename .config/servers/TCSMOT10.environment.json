@@ -1,0 +1,489 @@
+{
+    "ENVIRONMENT_NAME": "TCSMOT10",
+    "LOGS_LOCATION":[
+        "/data/smotc_tempdir/startstop_logs/*.log"
+    ],
+    "LOGS_LOCATION_WIN": [
+		"$AWC_PATH/tc14/microservices/file-repo-6.1.0/logs/FSC/process/fsc-*.log"
+	],
+    "WEB_SERVER1": [
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "demchdc4p2x",
+            "IP_ADDRESS": "139.25.225.68",
+            "ALIASNAME": "tcsmot10w01.tcsmot.siemens.com",
+            "WEB_PATH":"/data/tcsmot10",
+            "WEB_IDSLOS": "/data/tcsmot10/apache-tomcat-9.0.68_idslos",
+            "WEB_IF": "/data/tcsmot10/apache-tomcat-9.0.68_sso",
+            "WEB_SSO": "/data/tcsmot10/apache-tomcat-9.0.68_if"
+        }
+    ],    
+    "CORPORATE_SERVER": [
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "demchdc4p4x",
+            "IP_ADDRESS": "139.23.83.101",
+            "ALIASNAME": "tcsmot10v01.tcsmot.siemens.com",
+            "PATH": "/data/tcsmot10/tc14",
+            "TC_ROOT": "/data/tcsmot10/tc14",
+            "TC_DATA": "/data/tcsmot10/tc_data",
+            "VOLUMES": "/data/volumest10",
+            "VOLUMES_DBA": "/data/volumest10/dba_volume/dba_642d4a30",
+            "SSO_WEBTIER": "",
+            "T4S": "/data/tcsmot10/aig",
+            "CPM": "/data/tcsmot10/cpm",
+            "TC_USER": "infodba",
+            "TC_GROUP": "dba",
+            "TC_PWF": "/data/tcsmot10/tc14/security/config1_infodba.pwf",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",            
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10v01.tcsmot.siemens.com",
+            "SOFTWARE_REPO_TARGET_PATH":"/smo_share/dc_extra_software_dir/software_repository_r1",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "LD_LIBRARY_PATH": "/data/oracle/LINUX.X64_193000_client_home/lib",
+            "ORACLE_HOME": "/data/oracle/LINUX.X64_193000_client_home",
+            "BASHRC": "source ~/.bashrc",
+            "DB_USERNAME": "INFODBA",
+            "DB_PASSWORD": "345abcABC_abdog_niNIMDFGV_c",
+            "DB_SSID": "TRN1FUNC",
+            "DB_DIRECTORY": "TRN1FUNC_DUMPS",
+            "SCHEMAS": "INFODBA",
+            "POOL_DB_USERNAME": "TDBADMIN",
+            "POOL_DB_PASSWORD": "345abcABC_NIMDABVPuSeMg_F_c",
+            "POOL_DB_SSID": "TRN1FUNC",
+            "POOL_DB_DIRECTORY": "TRN1FUNC_DUMPS",
+            "POOL_SCHEMAS": "TDBADMIN",
+            "PROJECT_ADMIN":"projectadmin",
+            "PROJECT_PWF":"/data/tcsmot10/tc14/security/project_admin_pass.pwf",
+            "PROJECT_GROUP":"Project Administration",
+            "SO_PATH":"/data/tcsmot10/custom/lib",
+            "SYNCTCDATA_PATH": "/data/tcsmot10/tc_data_sso_lnx64",
+            "SMO_SHARE_TC_PROFILEVARS_NAME": "tc_profilevars",
+            "BGS_ROOT": "/data/tcsmot10/aig/bgs_root/bgs",
+            "GS_ROOT": "/data/tcsmot10/aig/gs_root/gs",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ],
+    "APP1_IF": [
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "demchdc4p4x",
+            "IP_ADDRESS": "139.23.83.101",
+            "ALIASNAME": "tcsmot10v01.tcsmot.siemens.com",
+            "PATH": "/data/tcsmot10/tc14",
+            "TC_ROOT": "/data/tcsmot10/tc14",
+            "TC_DATA": "/data/tcsmot10/tc_data",
+			"SO_PATH":"/data/tcsmot10/custom/lib",
+            "CPM": "/data/tcsmot10/cpm",        
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",            
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10v01.tcsmot.siemens.com",
+            "SOFTWARE_REPO_TARGET_PATH":"/smo_share/dc_extra_software_dir/software_repository_r1",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "SYNCTCDATA_PATH": "/smo_share/tc_data_win/tcsmot10/tc_data",
+            "SMO_SHARE_TC_PROFILEVARS_NAME": "tc_profilevars.bat",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ],   
+    "APP1_SSO": [
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "demchdc4p4x",
+            "IP_ADDRESS": "139.23.83.101",
+            "ALIASNAME": "tcsmot10v01.tcsmot.siemens.com",
+            "TC_ROOT":"/data/tcsmot10/tc14_sso",
+            "TC_DATA": "/data/tcsmot10/tc_data_sso_lnx64",
+            "CPM": "/data/tcsmot10/cpm",
+			"SO_PATH":"/data/tcsmot10/custom/lib",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",         
+            "SOFTWARE_REPO_TARGET_PATH":"/smo_share/dc_extra_software_dir/software_repository_r1",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_demchdc4p4x.dc4ca.siemens.de",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ],  
+    "VOLUME_SGP":[
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "sgsgpdc922x",
+            "IP_ADDRESS": "140.231.117.20",
+            "ALIASNAME": "tcsmot10sgpv01.tcsmot.siemens.com",
+            "VOLUMES_DBA": "/data/volumest10/dba_volume/dba_650c7274",
+            "TC_ROOT": "/data/tcsmot10/tc14",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10sgpv01.tcsmot.siemens.com",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "SOFTWARE_REPO_TARGET_PATH":"/data/TCDUMPS",
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH":"/data/TCDUMPS/extracted",
+            "DEPLOY_SCRIPT_TARGET_PATH": "/data/TCDUMPS/deployment",
+            "DEPLOYMENT_CENTER_REMOTE_EXECUTION": true,
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ],
+    "VOLUME_MLF":[
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "usmifdc82bx",
+            "IP_ADDRESS": "161.134.219.100",
+            "ALIASNAME": "tcsmot10mifv01.tcsmot.siemens.com",
+            "VOLUMES_DBA": "/data/volumest10/dba_volume/dba_650c7274",
+            "TC_ROOT": "/data/tcsmot10/tc14",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10mifv01.tcsmot.siemens.com",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "SOFTWARE_REPO_TARGET_PATH":"/data/TCDUMPS",
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH":"/data/TCDUMPS/extracted",
+            "DEPLOY_SCRIPT_TARGET_PATH": "/data/TCDUMPS/deployment",
+            "DEPLOYMENT_CENTER_REMOTE_EXECUTION": true,
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ],      
+    "DEPLOYMENT_CENTER": [
+        {
+            "OS_TYPE": "WIN",
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "demchdc73da.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "IP_ADDRESS": "139.25.225.71",
+            "ALIASNAME": "tcsmot10tstk01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_PATH": "D:/Tc_Appl/tcsmot10/DeploymentCenter_14.2",
+            "DEPLOYMENT_CENTER_DC_PATH": "D:/Tc_Appl/tcsmot10/dc/webserver/db",
+            "DEPLOYMENT_CENTER_REPOTOOL_PATH": "D:/Tc_Appl/tcsmot10/dc/webserver/repotool",
+            "DEPLOYMENT_CENTER_QUICKDEPLOY_PATH": "D:/Tc_Appl/tcsmot10/DeploymentCenter_14.2/deployment_center/additional_tools/internal/dc_quick_deploy",
+            "DEPLOYMENT_CENTER_SOFTWARE_REPO_TARGET_PATH": "D:/Tc_Appl/tcsmot10/dc/repository/software",
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH": "/smo_share/dc_extra_software_dir/software_repository_r1",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "EXPORT_PLATFROM": "lnx64",
+            "EXPORT_FILE_PATH": "D:/Tc_Appl/tcsmot10/dc/exportedFile",
+            "EXPORT_ENVIRONMENT_NAME": "TCSMOT10",
+            "DEPLOYMENT_CENTER_DEPLOY_SCRIPT_PATH": "D:/Tc_Appl/tcsmot10/dc/repository/deploy_scripts/TCSMOT10/install",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10tstk01.tcsmot.siemens.com",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/temp",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "DC_CLEAR_PASSWORD": "dcadmin",
+            "DISPATCHER_PATH": "D:/Tc_Appl/tcsmot10/dispatcher",
+            "DISPATCHER_ROOT_PATH": "D:/Tc_Appl/tcsmot10/tc14",
+            "DISPATCHER_DATA_PATH": "D:/Tc_Appl/tcsmot10/tc_data",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "DLL_PATH":"D:/Tc_Appl/tcsmot10/custom/lib",
+            "TCVIS_VVCP_PATH": "D:/Tc_Appl/tcsmot10/tc14_vis/VVCP"
+        }
+    ],
+    "DISPATCHER_SERVER": [
+        {
+            "OS_TYPE": "WIN",
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "demchdc73da.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "IP_ADDRESS": "139.25.225.71",
+            "ALIASNAME": "tcsmot10tstk01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_PATH": "D:/Tc_Appl/tcsmot10/DeploymentCenter_14.2",
+            "DEPLOYMENT_CENTER_DC_PATH": "D:/Tc_Appl/tcsmot10/dc/webserver/db",
+            "DEPLOYMENT_CENTER_REPOTOOL_PATH": "D:/Tc_Appl/tcsmot10/dc/webserver/repotool",
+            "DEPLOYMENT_CENTER_QUICKDEPLOY_PATH": "D:/Tc_Appl/tcsmot10/DeploymentCenter_14.2/deployment_center/additional_tools/internal/dc_quick_deploy",
+            "DEPLOYMENT_CENTER_SOFTWARE_REPO_TARGET_PATH": "D:/Tc_Appl/tcsmot10/dc/repository/software",
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH": "/smo_share/dc_extra_software_dir/software_repository_r1",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "EXPORT_PLATFROM": "lnx64",
+            "EXPORT_FILE_PATH": "D:/Tc_Appl/tcsmot10/dc/exportedFile",
+            "EXPORT_ENVIRONMENT_NAME": "TCSMOT10",
+            "DEPLOYMENT_CENTER_DEPLOY_SCRIPT_PATH": "D:/Tc_Appl/tcsmot10/dc/repository/deploy_scripts/TCSMOT10/install",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10tstk01.tcsmot.siemens.com",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/temp",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "DC_CLEAR_PASSWORD": "dcadmin",
+            "DISPATCHER_PATH": "D:/Tc_Appl/tcsmot10/dispatcher",
+            "DISPATCHER_ROOT_PATH": "D:/Tc_Appl/tcsmot10/tc14",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+            "DISPATCHER_DATA_PATH": "D:/Tc_Appl/tcsmot10/tc_data",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "DLL_PATH":"D:/Tc_Appl/tcsmot10/custom/lib",
+            "TCVIS_VVCP_PATH": "D:/Tc_Appl/tcsmot10/tc14_vis/VVCP",
+            "MYSCRIPT_CORE_PATH": "myscript_1.4.6.7_smo/myscript_core/tc14.1"
+        }
+    ], 
+    "AWC_MCH1_IF": [
+        {
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "demchdc73ca.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "OS_TYPE": "WIN",
+            "IP_ADDRESS": "139.25.225.70",
+            "ALIASNAME": "demchdc73ca.ad007.siemens.net",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc_if",
+            "AWC_STAGE_PATH": "D:/Tc_Appl/tcsmot10/tc_if/aws2/stage",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "FILE_REPO": "D:/Tc_Appl/tcsmot10/file_repository_if",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_demchdc73ca.ad007.siemens.net",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc_if/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/TC_TMP",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_AW_PATH": "myscript_1.4.6.7_smo/myscript_aw/aw6.1"
+        }
+    ],
+    "AWC_MCH1_SSO": [
+        {
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "demchdc73ca.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "OS_TYPE": "WIN",
+            "IP_ADDRESS": "139.25.225.70",
+            "ALIASNAME": "tcsmot10awc01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "AWC_STAGE_PATH": "D:/Tc_Appl/tcsmot10/tc14/aws2/stage",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10awc01.tcsmot.siemens.com",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/TC_TMP",
+			"FILE_REPO": "D:/Tc_Appl/tcsmot10/file_repository",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_AW_PATH": "myscript_1.4.6.7_smo/myscript_aw/aw6.1"
+        }
+    ], 
+    "AWC_BUILD": {
+        "executeServers": "AWC_MCH1_SSO"
+    },  
+    "AWC_MCH1": [
+        {
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "demchdc73ca.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "OS_TYPE": "WIN",
+            "IP_ADDRESS": "139.25.225.70",
+            "ALIASNAME": "tcsmot10awc01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+            "AWC_STAGE_PATH": "D:/Tc_Appl/tcsmot10/tc14/aws2/stage",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10awc01.tcsmot.siemens.com",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/TC_TMP",
+			"FILE_REPO": "D:/Tc_Appl/tcsmot10/file_repository",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "MYSCRIPT_AW_PATH": "myscript_1.4.6.7_smo/myscript_aw/aw6.1"
+        }
+    ],
+    "AWC_SSR": [
+        {
+            "USERNAME": "AD7L83F4",
+            "HOSTNAME": "demchdc8zua.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "OS_TYPE": "WIN",
+            "IP_ADDRESS": "139.23.6.140",
+            "ALIASNAME": "tcsmodqvis01.tcsmod.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmodqvis01.tcsmod.siemens.com",
+            "SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/TEMP",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321"
+        }
+    ],
+    "AWC_SGP": [
+        {
+            "OS_TYPE": "WIN",
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "sgsgpdc924a.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "IP_ADDRESS": "140.231.117.21",
+            "ALIASNAME": "tcsmot10sgpawc01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "FILE_REPO": "D:/Tc_Appl/tcsmot10/file_repository",
+            "FILE_REPO_BACKUP_PATH": "D:/TcBackup",
+            "AWCTRANSIT_PATH":"S:/dita_share_do_not_modify/awctransit",
+            "SMO_SHARE_ROOT_PATH": "\\\\sgsgpdcvs2002.ad007.siemens.net\\transfer_smoprod_sg",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10sgpawc01.tcsmot.siemens.com",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "SOFTWARE_REPO_TARGET_PATH":"D:/TCDUMPS",
+            "DEPLOYMENT_CENTER_REMOTE_EXECUTION": true,
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH":"D:/TCDUMPS/extracted",
+            "DEPLOY_SCRIPT_TARGET_PATH": "D:/TCDUMPS/deployment",
+			"AWC_STAGE_PATH": "D:/Tc_Appl/tcsmot10/tc14/aws2/stage",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/temp",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "MYSCRIPT_AW_PATH": "myscript_1.4.6.7_smo/myscript_aw/aw6.1"
+        }
+    ],
+    "AWC_MLF": [
+        {
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "usmifdc84ha.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "OS_TYPE": "WIN",
+            "IP_ADDRESS": "161.134.219.101",
+            "ALIASNAME": "tcsmot10mifawc01.tcsmot.siemens.com",
+            "TCAPPL_ROOT_DIR": "D:/Tc_Appl",
+            "DEPLOYMENT_CENTER_URI": "http://139.25.225.71:9097/deploymentcenter",
+            "DEPLOYMENT_CENTER_REMOTE_EXECUTION": true,
+            "SOFTWARE_REPO_TARGET_PATH":"D:/TCDUMPS",
+            "SMO_SHARE_SOFTWARE_REPO_TARGET_PATH":"D:/TCDUMPS/extracted",
+            "DEPLOY_SCRIPT_TARGET_PATH": "D:/TCDUMPS/deployment",
+            "DEPLOYMENT_CENTER_SERVER_DEPLOY_SCRIPT_FILENAME": "deploy_tcsmot10mifawc01.tcsmot.siemens.com",
+            "MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/Tc_Appl/tcsmot10/tc14/security/Mount-OS-encrypted-password.txt",
+            "DEPLOYMENT_CENTER_TEMP_DIR": "D:/temp",
+			"FILE_REPO": "D:/Tc_Appl/tcsmot10/file_repository",
+			"SMO_SHARE_ROOT_PATH": "\\\\usmifdcvs8213.ad007.siemens.net\\transfer_smoprod_us",
+			"FILE_REPO_BACKUP_PATH": "D:/TcBackup",
+			"AWCTRANSIT_PATH":"U:/dita_share_do_not_modify/awctransit",
+            "DC_USERNAME": "dcadmin",
+            "DC_PASSWORD": "dcadmin@321",
+            "TC_ROOT": "D:/Tc_Appl/tcsmot10/tc14",
+            "AWC_PATH": "D:/Tc_Appl/tcsmot10",
+            "AWC_STAGE_PATH": "D:/Tc_Appl/tcsmot10/tc14/aws2/stage",
+            "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+            "MYSCRIPT_AW_PATH": "myscript_1.4.6.7_smo/myscript_aw/aw6.1"
+        }
+    ],
+    "JENKINS_SERVER": [
+		{
+			"USERNAME": "infodba",
+            "HOSTNAME": "demchdc47xx",
+            "OS_TYPE": "LNX",
+            "IP_ADDRESS": "",
+            "ALIASNAME": "demchdc47xx.dc4ca.siemens.de"
+		}
+	],
+    "CORPORATE_SERVER_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "WEB_SERVER_ALL": {
+        "executeServers": "WEB_SERVER1"
+    },
+    "APP_ALL": {
+        "executeServers": "APP1_IF,APP1_SSO"
+    },
+    "CPM_ALL": {
+        "executeServers": "APP1_IF"
+    },
+    "AIG_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "SSOWEBTIER_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "TC_ROOT_LNX_ALL": {
+        "executeServers": "CORPORATE_SERVER,APP1_SSO,VOLUME_MLF,VOLUME_SGP"
+    },
+    "APP_IFALL": {
+        "executeServers": "APP1_IF"
+    },
+    "TC_ROOT_WIN_ALL": {
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "FRIGG_SERVER": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "SYNC_TC_DATA_ALL": {
+        "executeServers": "CORPORATE_SERVER,APP1_IF"
+    },
+    "COPY_SO_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "DISPATCHER_SCHEDULER_ALL": {
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "DISPATCHER_MODULE_ALL": {
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "DISPATCHER_CLIENT_ALL": {
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "DCSCRIPT_CORP_ALL": {
+        "executeServers": "APP1_SSO"
+    },
+    "DCSCRIPT_DISPATCHER_WIN_ALL":{
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "DCSCRIPT_DISPATCHER_LNX_ALL":{
+        "executeServers": ""
+    },
+    "DCSCRIPT_REMOTEDEPLOY_WIN_ALL": {
+        "executeServers": "AWC_SGP,AWC_MLF"
+    },
+    "DCSCRIPT_REMOTEDEPLOY_LNX_ALL": {
+        "executeServers": "VOLUME_SGP,VOLUME_MLF"
+    },
+    "DISPATCHER_WIN_ALL":{
+        "executeServers": "DISPATCHER_SERVER"
+    },
+    "DISPATCHER_LNX_ALL":{
+        "executeServers": ""
+    },
+    "GENERATE_MOUNT_ACCESS": {
+        "executeServers": "AWC_MCH1_IF,AWC_SGP,AWC_MCH1_SSO,AWC_MLF,DISPATCHER_SERVER"
+    },
+    "PREREQCHECK_SERVER": {
+        "executeServers": "AWC_MCH1_IF,AWC_SGP,AWC_MCH1_SSO,AWC_MLF,DISPATCHER_SERVER"
+    },
+    "AIG_SERVER_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "BACKUP_AWC_ALL": {
+        "executeServers": "AWC_MCH1_IF,AWC_MCH1_SSO,AWC_SGP,AWC_MLF,AWC_SSR"
+    },
+    "AWC_FILEREPO": {
+        "executeServers": "AWC_SGP,AWC_MLF"
+    },
+    "AWC_FILEREPO_SSO": {
+        "executeServers": "AWC_SGP,AWC_MLF"
+    },
+    "AWC_FILEREPO_LDAPSSO": {
+        "executeServers": ""
+    },
+    "MYSCRIPT_AWC_ALL": {
+        "executeServers": "AWC_MCH1_IF,AWC_MCH1_SSO"
+    },
+    "MYSCRIPT_CORE_ALL": {
+        "executeServers": "APP1_IF,APP1_SSO"
+    },
+    "CRON_ALL": {
+        "executeServers": "CORPORATE_SERVER"
+    },
+    "DCSCRIPT_AWC_ALL": {
+        "executeServers": "AWC_MCH1_IF,AWC_MCH1_SSO"
+    },
+    "CLEARLOCKS_ALL": {
+		"executeServers": "CORPORATE_SERVER" 
+	}
+}

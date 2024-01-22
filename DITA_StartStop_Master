@@ -1,0 +1,265 @@
+
+@Library('DITACI')_
+import com.lib.GlobalVars
+import com.lib.Utilities
+
+
+String AGENT_SERVER_TO_DEPLOY = null
+String AGENT_JENKINS_TO_SERVER_LNX = 'demchdc47xx'
+String JOB_TYPE = ""
+String DITA_SCRIPTS_PATH = ""
+String DITA_MANAGE_SCRIPTS = ""
+String DITA_DEPLOY_SCRIPTS = ""
+String SYSTEM_DOWN_MESSAGE = ""
+String SYSTEM_UP_MESSAGE = ""
+Boolean COMBINED_JOB = false
+def downtime = '-'
+String INCOMING_WEBHOOK_URL = ""
+def resourcesConfig = null
+def parametersConfig = null
+def branchesConfig = null
+def targetNode = null
+def utils = null
+String currentBuidWorkspace = null
+String PACKAGE_LIST_TO_DEPLOY = null
+def SUB_TARGETS_DEPLOYMENT_OPTIONS = null
+/* Pipeline JOB Setup required configurations */
+pipeline
+{
+    agent {
+        label AGENT_JENKINS_TO_SERVER_LNX
+    }
+    environment {
+        currentBuidWorkspace = ''
+    }
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        timeout(time: 300, unit: 'MINUTES')
+        ansiColor('xterm')
+        
+        // disableConcurrentBuilds()
+    }
+
+    // triggers {
+    //     parameterizedCron(
+    //         '''
+    //         # Scheduled on Test
+    //         */2 * * * * %TARGET_ENVIRONMENT=TCSMOD50;STARTSTOP_OPTION=Status_System;TIME_DELAY=0;NOTIFY_TEAMS_CHANNEL=false
+    //         '''
+    //     )
+    // }
+
+    stages {
+        stage('Checkout Deployment Framework from SMO_CI-CD') {
+            steps {
+                script {
+                    echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out  ]======== ]'
+                    cleanWs()
+                    git branch: 'ci-cd-dev',
+                    credentialsId: 'infodbaat47xx',
+                    url: 'git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/smo_ci-cd.git',
+                    changelog: false,
+                    poll: false
+                    currentBuidWorkspace = WORKSPACE
+                }
+            }
+            post {
+                    success {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project executed successfully ]======== ]'
+                    }
+                    failure {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project execution failed ]======== ]'
+                        notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                    }
+            }
+        }
+
+        stage('Setup Choice Parameters') {
+            steps {
+                script {                  
+                    dir(currentBuidWorkspace)
+                    {                   
+                        // Enhance the Parameters
+                        parametersConfig = parametersPipeline([
+                            currentBuidWorkspace: currentBuidWorkspace,
+                            parametersEnable: ["TARGET_ENVIRONMENT","STARTSTOP_OPTION", "TIME_DELAY", "NOTIFY_TEAMS_CHANNEL","TARGET_TEAMS_CHANNELS", "SYSTEM_DOWN_MESSAGE", "SYSTEM_UP_MESSAGE"]
+                        ])
+
+                    }
+                }
+            }
+        }
+
+        stage('Validate Packages') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            steps {
+                script {
+                    echo '[DEBUG INFO] DITA Prepare Deployment'
+                    utils = new Utilities()            
+                    resourcesConfig = configurations()
+                    AGENT_SERVER_TO_DEPLOY = parametersConfig['environmentConfig']['environment_options']."${params.TARGET_ENVIRONMENT}"[0]
+                    targetNode = utils.getHostNameFromLabels(AGENT_SERVER_TO_DEPLOY)
+                    if (params.TARGET_ENVIRONMENT.equals('TCSMOP10')) {
+                        branchesConfig = branches([
+                            configuration: resourcesConfig,
+                            parametersConfig: parametersConfig,
+                            shareLocation: resourcesConfig['SMO_SHARE_PROD_PATH']
+                        ])
+                    } else {
+                        branchesConfig = branches([
+                            configuration: resourcesConfig,
+                            parametersConfig: parametersConfig,
+                            shareLocation: resourcesConfig['SMO_SHARE_PATH']
+                        ])
+                    }
+                    DITA_SCRIPTS_PATH = branchesConfig['DITA_SCRIPTS_PATH']
+                    DITA_MANAGE_SCRIPTS = branchesConfig['DITA_MANAGE_SCRIPTS']
+                    DITA_DEPLOY_SCRIPTS = branchesConfig['DITA_DEPLOY_SCRIPTS']
+                    SYSTEM_DOWN_MESSAGE = params.SYSTEM_DOWN_MESSAGE
+                    SYSTEM_UP_MESSAGE = params.SYSTEM_UP_MESSAGE
+                    downtime = new Date().format("dd.MM.yyyy", TimeZone.getTimeZone('UTC'))
+                    def specificCause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')                   
+
+
+                    SYSTEM_DOWN_MESSAGE = SYSTEM_DOWN_MESSAGE.replace('TARGET_ENVIRONMENT', params.TARGET_ENVIRONMENT)
+                    SYSTEM_DOWN_MESSAGE = SYSTEM_DOWN_MESSAGE.replace('CURRENT_TIME_WITH_DELAY', utils.getCurrentTime(params.TIME_DELAY.toInteger()))
+
+                    SYSTEM_UP_MESSAGE = SYSTEM_UP_MESSAGE.replace('TARGET_ENVIRONMENT', params.TARGET_ENVIRONMENT)
+
+                    JOB_TYPE = utils.findJobType(currentBuild)       
+                    echo "[DEBUG INFO] Detected jobType: ${JOB_TYPE}"                    
+                    echo "[DEBUG INFO] TARGET_TEAMS_CHANNELS: ${params.TARGET_TEAMS_CHANNELS}"      
+                    echo "[DEBUG INFO] NOTIFY_TEAMS_CHANNEL: ${params.NOTIFY_TEAMS_CHANNEL}"                 
+                    echo "[DEBUG INFO] TARGET_ENVIRONMENT : ${params.TARGET_ENVIRONMENT}"
+                    echo "[DEBUG INFO] STARTSTOP_OPTION : ${params.STARTSTOP_OPTION}"                    
+                    echo "[DEBUG INFO] AGENT_SERVER_TO_DEPLOY: ${AGENT_SERVER_TO_DEPLOY}"   
+                    echo "[DEBUG INFO] TIME_DELAY To Start: ${params.TIME_DELAY}"                 
+                    echo "[DEBUG INFO] DITA_SCRIPTS_PATH: ${DITA_SCRIPTS_PATH}"
+                    echo "[DEBUG INFO] DITA_MANAGE_SCRIPTS: ${DITA_MANAGE_SCRIPTS}"
+                    echo "[DEBUG INFO] DITA_DEPLOY_SCRIPTS: ${DITA_DEPLOY_SCRIPTS}"                    
+                    echo "[DEBUG INFO] System Triggered By: ${specificCause.userName}"
+      
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy ${env.STAGE_NAME} on ${AGENT_SERVER_TO_DEPLOY} successfully ]========]"
+                }
+                failure {
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy ${env.STAGE_NAME} on ${AGENT_SERVER_TO_DEPLOY}  failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Status System') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(params.STARTSTOP_OPTION, 'Status_System') }
+            }
+            steps {
+                script {
+
+                    echo "[DEBUG INFO] DITA Status_System"                    
+                    // sleep(time: params.TIME_DELAY.toInteger(), unit:"MINUTES")                 
+                    String StatusAll_CMD = "${DITA_MANAGE_SCRIPTS}"                        
+                    runCommand([command: StatusAll_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename: "Status_System"]) 
+                    if (params.NOTIFY_TEAMS_CHANNEL.equals(true)) {
+                        notifications([parametersConfig: parametersConfig, options: 'system_up', body: SYSTEM_UP_MESSAGE])
+                    }                            
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+
+        stage('Stop System') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(params.STARTSTOP_OPTION, 'Stop_System') }
+            }
+            steps {
+                script {
+
+                    echo "[DEBUG INFO] DITA Stop_System"
+
+                    if (params.NOTIFY_TEAMS_CHANNEL.equals(true)) {
+                        notifications([parametersConfig: parametersConfig, options: 'system_down',body: SYSTEM_DOWN_MESSAGE, downtime: downtime])
+                    }                    
+                    sleep(time: params.TIME_DELAY.toInteger(), unit:"MINUTES") 
+                    String STARTSTOP_TIMESTAMP = new Date().format('yyyyMMdd.HHmm', TimeZone.getTimeZone('UTC')) 
+                    String StartStopAll_CMD = "${DITA_MANAGE_SCRIPTS} -m startstopall -a stop -d"
+                    String Clearlocks_CMD = "${DITA_DEPLOY_SCRIPTS} -m Clearlocks -p Clearlocks_${STARTSTOP_TIMESTAMP} -d"
+                    String Clearlogs_CMD = "${DITA_DEPLOY_SCRIPTS} -m Clearlogs -p Clearlogs_${STARTSTOP_TIMESTAMP} -d"
+                    runCommand([command: StartStopAll_CMD])
+                    runCommand([command: Clearlocks_CMD])
+                    runCommand([command: Clearlogs_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig, stagename: "Stop_System"])                    
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Start Env') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            when {
+            expression { utils.checkDeployTarget(params.STARTSTOP_OPTION, 'Start_System') }
+            }
+            steps {
+                script {               
+                    echo '[DEBUG INFO] DITA Start Env'         
+                    sleep(time: params.TIME_DELAY.toInteger(), unit:"MINUTES")                 
+                    String StartStopAll_CMD = "ssh ${utils.getHostNameFromLabels(AGENT_SERVER_TO_DEPLOY)} '${DITA_MANAGE_SCRIPTS} -m startstopall -a start -d'"                        
+                    runCommand([command: StartStopAll_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename: "Start_System"])               
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"
+                    script {
+                        if (params.NOTIFY_TEAMS_CHANNEL.equals(true)){                                             
+                            notifications([parametersConfig: parametersConfig, options: 'system_up', body: SYSTEM_UP_MESSAGE])
+                        }                        
+                    }                                      
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+    }
+
+}

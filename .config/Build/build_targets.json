@@ -1,0 +1,113 @@
+{
+  "TCRelease.updatetcversion": {
+    "executeTargets": "TCRelease.updatetcversion.lnx,TCRelease.updatetcversion.win",
+    "description": "Description content"
+  },
+  "TCRelease.updatetcversion.lnx": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "pattern": "DITA.TC_VERSION"
+  },
+  "TCRelease.updatetcversion.win": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "pattern": "DITA.TC_VERSION"
+  },
+  "TCRelease.updatepreferencesversion.lnx": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "location_in_package": "02_tc_configuration/15_preferences/override/site/smo_version_string.xml",
+    "pattern": ">-</"
+  },
+  "TCRelease.updatepreferencesversion.win": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "location_in_package": "02_tc_configuration/15_preferences/override/site/smo_version_string.xml",
+    "pattern": ">-</"
+  },
+  "BMIDE.build.win": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "location_in_package": "01_bmide",
+    "bmide_out_package_pattern": "$FOLDER_NAME_all_$SOFTWARE_VERSION_$BMIDE_BUILD_VERSION_$TC_VERSION",
+    "build_dependent": "CMN",
+    "bmide_build_version": 1,
+    "command": "bmide_generate_package.bat",
+    "error_keywords": ["Error", "Failure", "Utility has failed::RETURN::1020"],
+    "success_keywords": [
+      "The BMIDE Generate Package Utility is successful",
+      "Package location:"
+    ]
+  },
+  "BMIDE.dlls": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "location_in_package": "01_bmide",
+    "server_code_in_package": "04_tc_customization/01_server_customization/SMO_SM4_Server",
+    "location_out_package": "04_tc_customization/01_server_customization/binaries/dlls",
+    "command": "build_wntx64.bat",
+    "error_keywords": ["Error", "Failure"],
+    "success_keywords": ["Successfully Built All Libraries"]
+  },
+  "BMIDE.so": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:sm4smocommon:CMN", "RI:ri5smori:RI"],
+    "location_in_package": "01_bmide",
+    "server_code_in_package": "04_tc_customization/01_server_customization/SMO_SM4_Server",
+    "location_out_package": "04_tc_customization/01_server_customization/binaries/so_files",
+    "command": "build_lnx64.sh",
+    "error_keywords": ["Error", "Failure", "Error 1 (ignored)::SKIP"],
+    "success_keywords": ["Successfully Built All Libraries"]
+  },
+  "ITK.build.win": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+    "packages": ["Common:SMO_SM4_Server:CMN", "RI:SMO_SM4_Server:RI"],
+    "location_in_package": "04_tc_customization/01_server_customization/SMO_SM4_Server",
+    "location_out_package": "04_tc_customization/01_server_customization/binaries/dlls",
+    "command": "build_wntx64.bat",
+    "error_keywords": ["Error", "0 Error(s)::SKIP", "Failure"],
+    "success_keywords": ["Build SUCCESSFUL"]
+  },
+  "ITK.build.lnx": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:SMO_SM4_Server:CMN", "RI:SMO_SM4_Server:RI"],
+    "location_in_package": "04_tc_customization/01_server_customization/SMO_SM4_Server",
+    "location_out_package": "04_tc_customization/01_server_customization/binaries/so_files",
+    "dependent_in_package": "01_bmide",
+    "command": "build_lnx64.sh",
+    "error_keywords": ["Error", "smo_error_handling::SKIP", "Failure"],
+    "success_keywords": ["Build SUCCESSFUL"]
+  },
+  "BuildPackage.checkproperties": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:-:CMN", "RI:-:RI"],
+	  "checkout_path": "/data/lnxBuild/SMO_TC/$BRANCH",
+    "location_in_package": "05_dita",
+    "excludes_replacements": ["05_dita"],
+    "excludes_replacements_extension": [".exe", ".jar", ".lib", ".so", ".bin",".50"]
+  },
+  "BuildPackage.create.win": {
+    "executionServer": "BUILD_WIN_SERVER",
+    "description": "Description content",
+	  "checkout_path": "/data/lnxBuild/SMO_TC/$BRANCH",
+    "packages": ["Common:-:CMN", "RI:-:RI"],
+    "additional_folders": ["05_dita", "99_infra"]
+  },
+  "BuildPackage.create.lnx": {
+    "executionServer": "BUILD_LNX_SERVER",
+    "description": "Description content",
+    "packages": ["Common:-:CMN", "RI:-:RI"],
+	  "checkout_path": "/data/lnxBuild/SMO_TC/$BRANCH",
+    "additional_folders": ["05_dita", "99_infra"]
+  }
+}

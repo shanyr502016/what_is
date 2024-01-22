@@ -1,0 +1,1110 @@
+{
+  "Clearlocks.truncatepomtimestamp": {
+    "executionServer": "CORPORATE_SERVER",
+    "description": "Description content"
+  },
+  "Clearlocks.verbose": {
+    "executionServer": "CLEARLOCKS_ALL",
+    "command": "clearlocks",
+    "description": "Description content"
+  },
+  "Clearlocks.assertAllDead": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "clearlocks",
+    "description": "Description content"
+  },
+  "Clearlocks": {
+    "executeTargets": "Clearlocks.verbose,Clearlocks.assertAllDead",
+    "description": "Description content"
+  },
+  "Clearlogs": {
+    "executeTargets": "Clearlogs.delete.lnx,Clearlogs.delete.win",
+    "description": "Description content"
+  },
+  "Clearlogs.delete.lnx": {
+    "executionServer": "APP_IFALL",  
+    "delete_threshold": 15,  
+    "description": "Description content"  
+  },  
+  "Clearlogs.delete.win": {  
+    "executionServer": "BACKUP_AWC_ALL",  
+    "delete_threshold": 5,   
+    "description": "Description content"  
+  },
+  "Clearlogs.webserver": {  
+    "executionServer": "WEB_SERVER_ALL",
+    "logs_path": [
+      "$WEB_IF/logs/*",
+      "$WEB_IF/work/*",
+      "$WEB_IF/bin/logs/*",
+      "$WEB_SSO/logs/*",
+      "$WEB_SSO/work/*",
+      "$WEB_SSO/bin/logs/*",
+      "$WEB_IDSLOS/logs/*",
+      "$WEB_IDSLOS/work/*",
+      "$WEB_IDSLOS/bin/logs/*"
+    ],   
+    "description": "Description content"  
+  },
+  "Preferences.Override.Site": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/15_preferences/override/site",
+    "command": "preferences_manager",
+    "scope": "SITE",
+    "action": "OVERRIDE",
+    "description": "Description content"
+  },
+  "Preferences.Override.Group": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/15_preferences/override/group",
+    "command": "preferences_manager",
+    "scope": "GROUP",
+    "action": "OVERRIDE",
+    "description": "Description content"
+  },
+  "Preferences.Override.Role": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/15_preferences/override/role",
+    "command": "preferences_manager",
+    "scope": "ROLE",
+    "action": "OVERRIDE",
+    "description": "Description content"
+  },
+  "Preferences.Merge.Site": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/15_preferences/merge/site",
+    "command": "preferences_manager",
+    "scope": "SITE",
+    "action": "MERGE",
+    "description": "Description content"
+  },
+  "Preferences.Merge.Role": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/15_preferences/merge/role",
+    "command": "preferences_manager",
+    "scope": "ROLE",
+    "action": "MERGE",
+    "description": "Description content"
+  },
+  "Preferences": {
+    "executeTargets": "Preferences.Override.Site,Preferences.Override.Group,Preferences.Override.Role,Preferences.Merge.Site,Preferences.Merge.Role",
+    "description": "Description content"
+  },
+  "Organization.frigg": {
+    "executionServer": "FRIGG_SERVER",
+    "location_in_package": "organization",
+    "inputpath": "/data/frigg_staging",
+    "mapping_configuration": {
+      "address":"PA1",
+      "city":"PA2",
+      "state":"PA3",
+      "zip":"PA4",
+      "country":"PA5",
+      "organization":"PA6",
+      "gid": "PA7",
+      "mailcode": "PA8",
+      "email": "PA9",
+      "phone": "PA10",
+      "gmstatus":"gm_status"
+    },
+    "command": "make_user",
+    "description": "Description content"
+  },
+  "Organization.makeuser": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/12_organization",
+    "command": "make_user",
+    "description": "Description content"
+  },
+  "CopyLangTextServer.all": {
+    "executionServer": "APP_ALL",
+    "location_in_package": "02_tc_configuration/09_lang/textserver",
+    "targetpath": "lang/textserver",
+    "description": "Description content"
+  },
+  "Project.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/27_tcproject/create",
+    "command": "create_project",
+    "description": "Description content"
+  },
+  "Project.Update": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/27_tcproject/update",
+    "command": "create_project",
+    "description": "Description content"
+  },
+  "PreReq.Check": {
+    "executionServer": "PREREQCHECK_SERVER",
+	"SYSTEM_VARIABLES_WIN": ["JAVA_HOME", "JRE_HOME", "JRE64_HOME"]
+  },
+  "PreBMIDE": {
+    "executeTargets": "Organization.makeuser,Project.Update,Preferences,CopyLangTextServer.all",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Queries.customquery": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/16_queries/custom_query",
+    "command": "plmxml_import",
+    "import_mode": "overwrite",
+    "description": "Description content"
+  },
+  "Stylesheets.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/19_stylesheets",
+    "excludes_replacements": [""],
+    "command": "install_xml_stylesheet_datasets",
+    "inputFile": "stylesheet_index.txt",
+    "description": "Description content"
+  },
+  "Workflows.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/23_workflow",
+    "command": "plmxml_import",
+    "excludes_replacements": [""],
+    "import_mode": "overwrite",
+    "transfermode": "workflow_template_overwrite",
+    "description": "Description content"
+  },
+  "AMRuleTree.Check":{
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "12_smoke_test/access_checks",
+    "conversion_command": "ac_rules_xls_frontend",
+    "excel_file": "r1_authoringtools_access_checks.xlsx",
+    "xml_input": "r1_authoringtools_access_checks_input.xml",
+    "result_xml_output": "r1_authoringtools_access_checks_TestResults.xml",
+    "sheetName": "Sheet1",
+    "mappingSheet": "Mapping",
+    "am_rule_command": "am_rule_test_harness.sh"
+  },  
+  "AWSolrIndexing.execute" :{
+    "executionServer": "CORPORATE_SERVER",
+    "command": "awindexerutil"
+  },
+  "AwcUiConfig.tilesDelete": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_tiles/SMO_TileCollection-Remove.xml",
+    "command": "aws2_install_tilecollections",
+    "mode": "remove",
+    "description": "Description content"
+  },
+  "AwcUiConfig.tilesAdd": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_tiles/SMO_TileCollection-Create.xml",
+    "command": "aws2_install_tilecollections",
+    "mode": "add,update",
+    "description": "Description content"
+  },
+  "AwcUiConfig.tilesUpdate": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_tiles/SMO_Tiles.xml",
+    "command": "aws2_install_tilecollections",
+    "mode": "update",
+    "description": "Description content"
+  },
+  "AwcUiConfig.columnImport": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_column",
+    "command": "import_uiconfig",
+    "description": "Description content"
+  },
+  "AwcUiConfig.RelationBrowserDSImport": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_relation_browser",
+    "command": "install_relation_browser_datasets",
+    "inputFile": "import_rv_xml_file.txt",
+    "type": "XML",
+    "description": "Description content"
+  },
+  "AwcUiConfig.WorkspaceImport": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/04_awc/awc_workspace",
+    "command": "import_wsconfig",
+    "description": "Description content"
+  },
+  "AwcUiConfig": {
+    "executeTargets": "AwcUiConfig.WorkspaceImport,AwcUiConfig.tilesDelete,AwcUiConfig.tilesAdd,AwcUiConfig.tilesUpdate,AwcUiConfig.columnImport,AwcUiConfig.RelationBrowserDSImport",
+    "description": "Description content"
+  },
+  "NxAttributeMapping.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/03_nx_attribute_mapping",
+    "command": "import_attr_mappings",
+    "description": "Description content"
+  },
+  "ACL.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/01_access_control_list",
+    "command": "am_install_tree",
+    "mode": "replace_all",
+    "format": "xml",
+    "description": "Description content"
+  },
+  "BatchLovs.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/10_lovs",
+    "command": "bmide_manage_batch_lovs.sh",
+    "option": "update",
+    "description": "Description content"
+  },
+  "Classification.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/05_classification",
+    "command": "plmxml_import",
+    "import_mode": "overwrite",
+    "transfermode": "incremental_import",
+    "description": "Description content"
+  },
+  "ClosureRules.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/06_closure_rules",
+    "command": "plmxml_import",
+    "scope_rules_mode": "overwrite",
+    "description": "Description content"
+  },
+  "CopyTcData.copyfiles": {
+    "executionServer": "APP_ALL",
+    "location_in_package": "02_tc_configuration/20_tc_data",
+    "excludes_replacements": [""],
+    "targetpath": "$TC_DATA",
+    "description": "Description content"
+  },
+  "Clsutility.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "clsutility",
+    "cid": "ICM",
+    "output_path": "clsutility.log",
+    "description": "Description content"
+  },
+  "TCSecurity.copy": {
+    "executionServer": "APP_ALL",
+    "location_in_package": "02_tc_configuration/26_tc_root/security",
+    "description": "Description content"
+  },
+  "CopySoDLL": {
+    "executeTargets": "CopySoDLL.SO.CORPORATE,CopySoDLL.DLL.DISPATCHER",
+    "description": "Description content"
+  },
+  "CopySoDLL.SO.CORPORATE": {
+    "executionServer": "COPY_SO_ALL",
+    "location_in_package": "04_tc_customization/01_server_customization/binaries/so_files",
+    "description": "Description content"
+  },
+  "CopySoDLL.DLL.DISPATCHER": {
+    "executionServer": "DISPATCHER_WIN_ALL",
+    "location_in_package": "04_tc_customization/01_server_customization/binaries/dlls",
+    "description": "Description content"
+  },
+  "Transfermodes.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/22_transfer_modes",
+    "command": "tcxml_import",
+    "scope_rules_mode": "overwrite",
+    "scope_rules": "transfermode",
+    "description": "Description content"
+  },
+  "Report.Import": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "02_tc_configuration/17_reports",
+    "command": "import_export_reports"
+  },
+  "GenerateClientMetaCache.execute": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "generate_client_meta_cache",
+    "description": "Description content"
+  },
+  "Dita.infrabackup": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "99_infra",
+    "targetPath": "ShareFiles",
+    "description": "Description content"
+  },
+  "Dita.infra": {
+    "executionServer": "CORPORATE_SERVER",
+    "location_in_package": "99_infra",
+    "description": "Description content"
+  },
+  "NXShare.deploy": {
+    "location_in_package": "08_nx",
+    "targetpath": ["/smo_share/NX-share","/smo_share_prod/NX-share", "/smo_share_prod_us/NX-share","/smo_share_prod_sg/NX-share"],
+    "description": "Description content"
+  },
+  "WebDV.deploy.web01": {
+	  "targetServer": "WEB_SERVER1",
+    "executionServer": "CORPORATE_SERVER",
+    "description": "Description content"
+  },
+  "WebDV.deploy.web02": {
+	  "targetServer": "WEB_SERVER2",
+    "executionServer": "CORPORATE_SERVER",
+    "description": "Description content"
+  },
+  "War.deploy.web01": {
+    "executeTargets": "War.deploy.sso.web01,War.deploy.ids.web01,War.deploy.los.web01,War.deploy.if.web01",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "War.deploy.web02": {
+    "executeTargets": "War.deploy.sso.web02,War.deploy.ids.web02,War.deploy.los.web02,War.deploy.if.web02",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "War.deploy.sso.web01":{
+    "targetServer": "WEB_SERVER1",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB01",
+    "warSourceFileKey": "WEB_SSO_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_SSO_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.sso.web02":{
+    "targetServer": "WEB_SERVER2",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB02",
+    "warSourceFileKey": "WEB_SSO_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_SSO_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.ids.web01":{
+    "targetServer": "WEB_SERVER1",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB01",
+    "warSourceFileKey": "WEB_IDS_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_IDS_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.ids.web02":{
+    "targetServer": "WEB_SERVER2",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB02",
+    "warSourceFileKey": "WEB_IDS_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_IDS_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.los.web01":{
+    "targetServer": "WEB_SERVER1",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB01",
+    "warSourceFileKey": "WEB_LOS_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_LOS_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.los.web02":{
+    "targetServer": "WEB_SERVER2",
+    "executionServer": "WEBSERVER_WAR_SSO_WEB02",
+    "warSourceFileKey": "WEB_LOS_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_LOS_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.if.web01":{
+    "targetServer": "WEB_SERVER1",
+    "executionServer": "WEBSERVER_WAR_IF_WEB01",
+    "warSourceFileKey": "WEB_IF_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_IF_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "War.deploy.if.web02":{
+    "targetServer": "WEB_SERVER2",
+    "executionServer": "WEBSERVER_WAR_IF_WEB02",
+    "warSourceFileKey": "WEB_IF_SOURCE_WAR_FILE",
+	  "warTargetFileKey": "WEB_IF_TARGET_WAR_FILE",
+    "description": "Description content"
+  },
+  "TCVis.deploy":{
+    "executionServer": "DISPATCHER_WIN_ALL",
+    "location_in_package": "10_tcvis/VVCP",
+    "description": "Description content"
+  },
+  "SyncData.tc": {
+    "executionServer": "SYNC_TC_DATA_ALL",
+    "description": "Description content"
+  },
+  "NXShare": {
+    "executeTargets": "NXShare.deploy",
+    "description": "Description content"
+  },
+  "PostBMIDE": {
+    "executeTargets": "Queries.customquery,Stylesheets.Import,BatchLovs.Import,Workflows.Import,ClosureRules.Import,AwcUiConfig,Clsutility.Import,TCSecurity.copy,ACL.Import,NxAttributeMapping.Import,Transfermodes.Import,TCVis.deploy,Report.Import,CopyTcData.copyfiles,NXShare,CopySoDLL,Dispatcher.Client,Dispatcher.Module,MyScript.Deploy,AWC.copy,AWC.build",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "PostBMIDE.Online": {
+    "executeTargets": "Queries.customquery,Stylesheets.Import,BatchLovs.Import,Workflows.Import,ClosureRules.Import,AwcUiConfig,Clsutility.Import,TCSecurity.copy,ACL.Import,NxAttributeMapping.Import,Transfermodes.Import,Report.Import,CopyTcData.copyfiles,NXShare",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "AWC.copy": {
+    "executionServer": "AWC_BUILD",
+    "location_in_package": "04_tc_customization/02_awc/stage",
+    "description": "Description content"
+  },
+  "AWC.build": {
+    "executionServer": "AWC_BUILD",
+	  "parallel": true,
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.build.if": {
+    "executionServer": "AWC_MCH1_IF",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.build.sso": {
+    "executionServer": "AWC_MCH1_SSO",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.build.ldapsso": {
+    "executionServer": "AWC_MCH1_LDAPSSO",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.deploy": {
+    "executeTargets": "AWC.copy,AWC.build",
+    "description": "Description content"
+  },
+  "AWC.fileRepoCopy.old": {
+    "executionServer": "AWC_FILEREPO",
+    "buildServer": "AWC_MCH1_SSO",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.fileRepoCopy": {
+    "executeTargets": "AWC.fileRepoCopy.sso",
+    "description": "Description content"
+  },
+  "AWC.fileRepoCopy.sso": {
+    "executionServer": "AWC_FILEREPO_SSO",
+    "buildServer": "AWC_MCH1_SSO",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "AWC.fileRepoCopy.ldapsso": {
+    "executionServer": "AWC_FILEREPO_LDAPSSO",
+    "buildServer": "AWC_MCH1_LDAPSSO",
+    "temp_paths": [
+      "C:/Users/$USERNAME/filerepo_id",
+      "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+    ],
+    "description": "Description content"
+  },
+  "MyScript.Core": {
+    "executeTargets": "MyScript.Core.win,MyScript.Core.lnx",
+    "description": "Description content"
+  },
+  "MyScript.Core.win": {
+    "executionServer": "DISPATCHER_WIN_ALL",
+    "location_in_share": "/smo_share/tcdownload/additional_installations/MyScript",
+    "source_path":"$DLL_PATH",
+    "destination_path":["*.dll","myscript.exe"],
+    "description": "Description content"
+  },
+  "MyScript.Core.lnx": {
+    "executionServer": "MYSCRIPT_CORE_ALL",
+    "location_in_share": "/smo_share/tcdownload/additional_installations/MyScript",
+    "so_source_path":"$SO_PATH",
+    "soa_source_path":"$TC_DATA/soa",
+    "so_destination_path":["*.so","myscript"],
+    "soa_destination_path":["E7SoaMyScriptMap.properties"],
+    "description": "Description content"
+  },
+  "MyScript.AWC": {
+    "executionServer": "MYSCRIPT_AWC_ALL",
+    "location_in_share": "/smo_share/tcdownload/additional_installations/MyScript",      
+    "source_path":"$AWC_STAGE_PATH/src",
+    "destination_path":["soa","myscript","image"],
+    "description": "Description content"
+  },
+  "MyScript.Deploy": {
+    "executionServer": "MYSCRIPT_CORE_ALL",
+    "lua_path":"myscript_LUA_PATH",
+    "location_in_package": "04_tc_customization/04_myscript",
+    "destination_path":"/data/$ENVIRONMENT_NAME/custom",
+    "description": "Description content"    
+  },
+  "DCScript.win": {
+    "executeTargets": "DCScript.exportENVXML.win,DCScript.generateDeployScripts.win",
+    "description": "Description content"
+  },
+  "DCScript.lnx": {
+    "executeTargets": "DCScript.exportENVXML.lnx,DCScript.generateDeployScripts.lnx",
+    "description": "Description content"
+  },
+  "DCScript.encryption": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "dc_quick_deploy_command": "dc_quick_deploy.bat",
+    "description": "Description content"
+  },
+  "DCScript.exportENVQD.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "description": "Description content"
+  },
+  "DCScript.exportENVQD.lnx": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "description": "Description content"
+  },
+  "DCScript.exportENVXML.lnx": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "dc_quick_deploy_command": "dc_quick_deploy.sh",
+    "description": "Description content"
+  },  
+  "DCScript.exportENVXML.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "dc_quick_deploy_command": "dc_quick_deploy.bat",
+    "description": "Description content"
+  },
+  "DCScript.PackageTransfer": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "description": "Description contents"
+  },
+  "DCScript.generateDeployScripts.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "dc_quick_deploy_command": "dc_quick_deploy.bat",
+    "description": "Description content"
+  },
+  "DCScript.generateDeployScripts.lnx": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "location_in_package": "01_bmide",
+    "dc_quick_deploy_command": "dc_quick_deploy.sh",
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp": {
+    "executionServer": "APP1_IF",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.app01if": {
+    "executionServer": "APP1_IF",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.app01sso": {
+    "executionServer": "APP1_SSO",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.app02if": {
+    "executionServer": "APP2_IF",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.app02sso": {
+    "executionServer": "APP2_SSO",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.all": {
+    "executionServer": "DCSCRIPT_CORP_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.web": {
+    "executionServer": "WEB_SERVER_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.corp.batch": {
+    "executionServer": "DCSCRIPT_BATCH_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.awc": {
+    "executionServer": "DCSCRIPT_AWC_ALL",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.mch1": {
+    "executionServer": "AWC_MCH1_LDAPSSO",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.mch2": {
+    "executionServer": "AWC_MCH2_LDAPSSO",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.if": {
+    "executionServer": "AWC_MCH1_IF",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.alias": {
+    "executionServer": "AWC_MCH1_SSO",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.mch1.alias": {
+    "executionServer": "AWC_MCH1_SSO",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.mch2.alias": {
+    "executionServer": "AWC_MCH2_SSO",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+"DCScript.deploy.awc.ssr": {
+    "executionServer": "AWC_SSR",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "DCScript.deploy.awcsolr": {
+    "executionServer": "DCSCRIPT_AWCSOLR_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.volumes": {
+    "executionServer": "DCSCRIPT_VOLUME_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.aig": {
+    "executionServer": "DCSCRIPT_AIGBGS_ALL",
+    "command": "deploy.sh",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "DCScript.deploy.dispatcher.win": {
+    "executionServer": "DCSCRIPT_DISPATCHER_WIN_ALL",
+    "command": "deploy.bat",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "DCScript.deploy.dispatcher.lnx": {
+    "executionServer": "DCSCRIPT_DISPATCHER_LNX_ALL",
+    "command": "deploy.sh",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "DCScript.remotedeploy.win": {
+    "executionServer": "DCSCRIPT_REMOTEDEPLOY_WIN_ALL",
+    "command": "deploy.bat",
+    "location_in_package": "01_bmide",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "DCScript.remotedeploy.lnx": {
+    "executionServer": "DCSCRIPT_REMOTEDEPLOY_LNX_ALL",
+    "command": "deploy.sh",
+    "location_in_package": "01_bmide",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Dita.replacement":{
+    "executionServer": "CORPORATE_SERVER",
+    "excludes_replacements": ["deploy_*", "05_dita"],
+    "excludes_replacements_extension": [".exe", ".jar", ".lib", ".so", ".bin",".50"],
+    "properties_config_in_package": "05_dita",
+    "description": "Dita Replacement doing the environment specific values will update based on dita properties files"
+  },
+  "Dita.getkeepass": {
+    "executionServer": "CORPORATE_SERVER",
+    "description": "OS Mount Drive Encrypted"
+  },
+  "Dita.generateMountPassword": {
+    "executionServer": "GENERATE_MOUNT_ACCESS",
+    "description": "OS Mount Drive Encrypted"
+  },
+  "Dispatcher.Client": {
+    "executionServer": "DISPATCHER_CLIENT_ALL",
+    "location_in_package": "06_dispatcher",
+    "excludes_replacements": [],
+    "description": "Description content"
+  },
+  "Dispatcher.Module": {
+    "executionServer": "DISPATCHER_MODULE_ALL",
+    "location_in_package": "06_dispatcher",
+    "excludes_replacements": [],
+    "description": "Description content"
+  },
+  "AIG.deploy": {
+    "executionServer": "AIG_SERVER_ALL",
+    "location_in_package": "09_t4s",
+    "excludes_replacements": ["snc"],
+    "description": "Description content"
+  },
+  "AIG.SNC": {
+    "executionServer": "AIG_SERVER_ALL",
+    "command":"snc.sh",
+    "files_to_delete": ["cred_v2","*.pse"],
+    "description": "Description content"
+  },
+  "MetaDataCache": {
+    "executeTargets": "MetaDataCache.generateMetaDataCacheDelete,MetaDataCache.clientMetaCacheDelete,MetaDataCache.clientMetaCacheGenerate,MetaDataCache.generateMetaDataCache",
+    "description": "Description content"
+  },
+  "MetaDataCache.clientMetaCacheDelete": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "generate_client_meta_cache",
+    "description": "Description content"
+  },
+  "MetaDataCache.clientMetaCacheGenerate": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "generate_client_meta_cache",
+    "description": "Description content"
+  },
+  "MetaDataCache.generateMetaDataCacheDelete": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "generate_metadata_cache",
+    "description": "Description content"
+  },
+  "MetaDataCache.generateMetaDataCache": {
+    "executionServer": "CORPORATE_SERVER",
+    "command": "generate_metadata_cache",
+    "description": "Description content"
+  },
+  "Backup.db": {
+    "executeTargets": "Backup.infodba,Backup.pooldb",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Backup.infodba": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.pooldb": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.volumes_dba": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.volumes_all": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.Preferences.Site": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "command": "preferences_manager",
+    "scope": "SITE",
+    "description": "Description content"
+  },
+  "Backup.rmsharedmemdir": {
+    "executionServer": "CORPORATE_SERVER",
+    "logFolderPath": "/data/smotc_tempdir/shared_memory_dir/V14000.1.0.13_20221010.01",
+    "description": "Description content"
+  },
+  "Backup.web": {
+    "executionServer": "WEB_SERVER_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.warcreationsetup": {
+    "executionServer": "WEB_SERVER_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.dc.lnx": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.dc.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Backup.deploymentcenter": {
+    "executeTargets": "Backup.deploymentcenter.lnx,Backup.deploymentcenter.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Backup.dc": {
+    "executeTargets": "Backup.dc.lnx,Backup.dc.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Backup.deploymentcenter.lnx": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.deploymentcenter.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Backup.cpm": {
+    "executionServer": "CPM_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.T4S": {
+    "executionServer": "AIG_ALL",
+    "parallel": true,
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.SSO_WebTier": {
+    "executionServer": "SSOWEBTIER_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.tcdata": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.tcroot": {
+    "executeTargets": "Backup.tcroot.lnx,Backup.tcroot.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Backup.tcroot.lnx": {
+    "executionServer": "TC_ROOT_LNX_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.tcroot.win": {
+    "executionServer": "TC_ROOT_WIN_ALL",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Backup.dispatcher": {
+    "executeTargets": "Backup.dispatcher.lnx,Backup.dispatcher.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Backup.dispatcher.win": {
+    "executionServer": "DISPATCHER_WIN_ALL",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Backup.dispatcher.lnx": {
+    "executionServer": "DISPATCHER_LNX_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.dispatcherdata": {
+    "executionServer": "DISPATCHER_SERVER",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Backup.awc": {
+    "executionServer": "BACKUP_AWC_ALL",
+    "targetPath": "D:/TC_backup",
+    "parallel": true,
+    "excludes": [
+      "file_repository",
+	    "file_repository_if",
+      "file_repositoy_if",
+      "file_repository_sso",
+      "file_repository_ldapsso",
+      "tc_data",
+      "tc_data_1",
+      "tc_data_old"
+    ],
+    "description": "Description content"
+  },
+  "Backup.tcprofilevars": {
+    "executionServer": "SYNC_TC_DATA_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Backup.adminData": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "command":"admin_data_export",
+    "description": "Description content"
+  },
+  "Backup": {
+    "executeTargets": "Backup.Preferences.Site,Backup.deploymentcenter.win,Backup.dc.win,Backup.web,Backup.warcreationsetup,Backup.volumes_dba,Backup.cpm,Backup.T4S,Backup.tcprofilevars,Backup.tcroot.win,Backup.tcroot.lnx,Backup.dispatcher,Backup.tcdata,Backup.SSO_WebTier,Backup.awc,Backup.db",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Backup.mig": {
+    "executeTargets": "Backup.deploymentcenter.lnx,Backup.dc.lnx,Backup.tcroot,Backup.tcdata,Backup.volumes_dba,Backup.tcprofilevars,Backup.Preferences.Site,Backup.db",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Backup.nosso": {
+    "executeTargets": "Backup.deploymentcenter.win,Backup.dc.win,Backup.dispatcher,Backup.awc,Backup.tcroot,Backup.tcprofilevars,Backup.tcdata,Backup.volumes_dba,Backup.Preferences.Site,Backup.T4S,Backup.cpm",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Backup.corp": {
+    "executeTargets": "Backup.tcroot,Backup.tcdata,Backup.volumes_dba,Backup.Preferences.Site,Backup.tcprofilevars,Backup.T4S,Backup.cpm,Backup.db",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Restore": {
+    "executeTargets": "Restore.deploymentcenter.win,Restore.dc.win,Restore.web,Restore.volumes_dba,Restore.tcroot.win,Restore.tcroot.lnx,Restore.dispatcher,Restore.tcdata,Restore.SSO_WebTier,Restore.awc",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Restore.mig": {
+    "executeTargets": "Restore.deploymentcenter.lnx,Restore.dc.lnx,Restore.tcroot,Restore.tcdata,Restore.volumes_dba",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Restore.nosso": {
+    "executeTargets": "Restore.deploymentcenter.win,Restore.dc.win,Restore.dispatcher,Restore.awc,Restore.tcroot,Restore.tcdata,Restore.volumes_dba,Restore.T4S,Restore.cpm",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Restore.corp": {
+    "executeTargets": "Restore.tcroot,Restore.tcdata,Restore.volumes_dba,Restore.T4S,Restore.cpm",
+    "parallel": true,
+    "description": "Description content"
+  },
+  "Restore.tcdata": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.tcroot": {
+    "executeTargets": "Backup.tcroot.lnx,Backup.tcroot.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Restore.tcroot.lnx": {
+    "executionServer": "TC_ROOT_LNX_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.tcroot.win": {
+    "executionServer": "TC_ROOT_WIN_ALL",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Restore.volumes_dba": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.volumes_all": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.dc.lnx": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.dc.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "D:/Tc_backup",
+    "description": "Description content"
+  },
+  "Restore.deploymentcenter.lnx": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.deploymentcenter.win": {
+    "executionServer": "DEPLOYMENT_CENTER",
+    "targetPath": "D:/Tc_backup",
+    "description": "Description content"
+  },
+  "Restore.dispatcher": {
+    "executeTargets": "Backup.dispatcher.lnx,Backup.dispatcher.win",
+    "parallel": false,
+    "description": "Description content"
+  },
+  "Restore.dispatcherroot": {
+    "executionServer": "DISPATCHER_SERVER",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Restore.dispatcher.win": {
+    "executionServer": "DISPATCHER_WIN_ALL",
+    "targetPath": "D:/TC_backup",
+    "description": "Description content"
+  },
+  "Restore.dispatcher.lnx": {
+    "executionServer": "DISPATCHER_LNX_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.dispatcherdata": {
+    "executionServer": "DISPATCHER_SERVER",
+    "targetPath": "D:/Tc_backup",
+    "description": "Description content"
+  },
+  "Restore.awc": {
+    "executionServer": "BACKUP_AWC_ALL",
+    "targetPath": "D:/Tc_backup",
+    "description": "Description content"
+  },
+  "Restore.T4S": {
+    "executionServer": "AIG_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.SSO_WebTier": {
+    "executionServer": "WEB_SERVER1",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.cpm": {
+    "executionServer": "APP_IFALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.web": {
+    "executionServer": "WEB_SERVER_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.warcreationsetup": {
+    "executionServer": "WEB_SERVER_ALL",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.tcprofilevars": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "description": "Description content"
+  },
+  "Restore.adminData": {
+    "executionServer": "CORPORATE_SERVER",
+    "targetPath": "/data/TcBakup",
+    "command":"admin_data_import",
+    "description": "Description content"
+  }
+}

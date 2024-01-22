@@ -1,0 +1,14 @@
+# Configure each Teamcenter Modules list action
+
+modules:
+  - All
+  - Allwin
+  - winLibs
+  - winUtils
+  - winJars
+  - winBMIDE
+  - winBmideDlls
+  - Alllnx
+  - lnxBmideSos
+  - lnxLibs
+  - lnxUtils

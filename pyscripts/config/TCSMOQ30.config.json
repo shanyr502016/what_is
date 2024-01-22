@@ -1,0 +1,508 @@
+{
+  "ENVIRONMENT": "TCSMOQ30",
+  "MANAGE": [
+    "FSC_IF",
+    "FSC_SSO",
+    "FSC_IFUS",
+    "FSC_IFSG",
+    "POOL_IF",
+    "POOL_SSO",
+    "WEB_IF",
+    "WEB_IDSLOS",
+    "WEB_SSO",
+    "SOLR",
+    "ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "CPM",
+    "TCIF",
+    "MGMT",
+    "INDEXINGTASK",
+    "AWC_MICRO",
+    "AWC_MICRO_US",
+    "AWC_MICRO_SGP",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "TCCS",
+    "AIG_BGS",
+    "AIG_GS",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON"
+  ],
+  "START": [
+    "FSC_IF",
+    "FSC_SSO",
+    "FSC_IFUS",
+    "FSC_IFSG",
+    "POOL_IF",
+    "POOL_SSO",
+    "WEB_IF",
+    "WEB_IDSLOS",
+    "WEB_SSO",
+    "SOLR",
+    "ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "CPM",
+    "TCIF",
+    "MGMT",
+    "INDEXINGTASK",
+    "AWC_MICRO",
+    "AWC_MICRO_US",
+    "AWC_MICRO_SGP",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "TCCS",
+    "AIG_BGS",
+    "AIG_GS",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON"
+  ],
+  "STOP": [
+    "FSC_IF",
+    "FSC_SSO",
+    "FSC_IFUS",
+    "FSC_IFSG",
+    "POOL_IF",
+    "POOL_SSO",
+    "WEB_IF",
+    "WEB_IDSLOS",
+    "WEB_SSO",
+    "SOLR",
+    "ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "CPM",
+    "TCIF",
+    "MGMT",
+    "INDEXINGTASK",
+    "AWC_MICRO",
+    "AWC_MICRO_US",
+    "AWC_MICRO_SGP",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "TCCS",
+    "AIG_BGS",
+    "AIG_GS",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON",
+    "DEADPROCESS"
+  ],
+  "FSC": {
+    "INSTANCES": "FSC_IF,FSC_SSO,FSC_IFSG,FSC_IFUS",
+    "Description": "Description content"
+  },
+  "FSC_DCSCRIPT": {
+    "INSTANCES": "FSC_IF,FSC_SSO,FSC_IFSG,FSC_IFUS",
+    "Description": "Description content"
+  },
+  "FSC_IF": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "FSC_LOCATION": "/data/tcsmoq30/tc_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_TCSMOQ30V01_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_SSO": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_SSO",
+        "FSC_LOCATION": "/data/tcsmoq30/tc_sso/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_demchdc4npxdc4casiemensde_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFSG": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_SGP",
+        "FSC_LOCATION": "/data/tcsmoq30/tc_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmoq30sgsgpv01tcsmoqsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFUS": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_MLF",
+        "FSC_LOCATION": "/data/tcsmoq30/tc_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmoq30mifv01tcsmoqsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "POOL": {
+    "INSTANCES": "POOL_IF,POOL_SSO"
+  },
+  "POOL_IF": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "POOL_LOCATION": "/data/tcsmoq30/tc_if/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmoq30_if",
+        "SERVICE_NAME": "POOL_IF"
+      }
+    ]
+  },
+  "POOL_SSO": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "POOL_LOCATION": "/data/tcsmoq30/tc_sso/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmoq30_sso",
+        "SERVICE_NAME": "POOL_SSO"
+      }
+    ]
+  },
+  "SOLR": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "SOLR_LOCATION": "/",
+        "COMMAND": "Active Workspace Indexing Service"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_ALL": {
+    "INSTANCES": "WEB_IF,WEB_IDSLOS,WEB_SSO"
+  },
+  "WEB_IF": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmoq30/apache-tomcat-9.0.84_if/bin",
+        "SERVICE_NAME": "Web_IF"
+      }
+    ]
+  },
+  "WEB_IDSLOS": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmoq30/apache-tomcat-9.0.84_idslos/bin",
+        "SERVICE_NAME": "Web_DSLOS"
+      }
+    ]
+  },
+  "WEB_SSO": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmoq30/apache-tomcat-9.0.84_sso/bin",
+        "SERVICE_NAME": "Web_SSO"
+      }
+    ]
+  },
+  "INDEXINGTASK": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "D:/Tc_Appl/tcsmoq30/tc_sso/TcFTSIndexer/bin",
+        "COMMAND": "PLM-runTcFTSIndexer",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SSR",
+        "LOCATION": "D:/Tc_Appl/tcsmoq30/tc_if/tccs"
+      }
+    ]
+  },
+  "MGMT": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/tc_sso/mgmt_console/container/bin",
+        "SERVICE_NAME": "MGMT"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AIG": {
+    "INSTANCES": "AIG_BGS,AIG_GS"
+  },
+  "AIG_BGS": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/aig/bgs_root/bgs/bin64",
+        "SERVICE_NAME": "tpbgs"
+      }
+    ]
+  },
+  "AIG_GS": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/aig/gs_root/gs/bin64",
+        "SERVICE_NAME": "tpapps"
+      }
+    ]
+  },
+  "ACTIONMGR": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/tc_if/bin",
+        "SERVICE_NAME": "ACTIONMGR",
+        "COMMAND": "nohup ./actionmgrd"
+      }
+    ]
+  },
+  "SUBSCRIPTIONMGR": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/tc_if/bin",
+        "SERVICE_NAME": "SUBSCRIPTIONMGR",
+        "COMMAND": "nohup ./subscriptionmgrd"
+      }
+    ]
+  },
+  "AWC_ALL": {
+    "INSTANCES": "AWC_MICRO,AWC_VISASSIGN,AWC_VISPOOL",
+    "Description": "Description content"
+  },
+  "AWC_MICRO": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_IF",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager-IF",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      },
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      },      
+      {
+        "NODE": "AWC_MCH1_LDAPSSO",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager-LDAPSSO",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_REMOTE": {
+    "INSTANCES": "AWC_MICRO_US,AWC_MICRO_SGP"
+  },
+  "AWC_MICRO_US": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MLF",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ]
+  },
+  "AWC_MICRO_SGP": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SGP",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ]
+  },
+  "AWC_VISASSIGN": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SSR",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter VisServlet visassigner-Q30"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SSR",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter VisServlet vispool-Q30"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CPM": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "CPM_LOCATION": "/data/tcsmoq30/cpm/cpm_6.3.3/bin",
+        "SERVICE_NAME": "CPM"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCIF": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "TCIF_LOCATION": "/data/tcsmoq30/tc_if/tcif/container/bin",
+        "SERVICE_NAME": "TCIF",
+        "COMMAND": "nohup ./lnxservice &",
+        "STOP_COMMAND": "echo"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DISPATCHER_ALL": {
+    "INSTANCES": "DISPATCHER_SCHEDULER,DISPATCHER_MODULE,DISPATCHER_CLIENT",
+    "Description": "Description content"
+  },
+  "DISPATCHER_SCHEDULER": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "LOCATION": "/data/tcsmoq30/dispatcher/Scheduler/bin",
+        "COMMAND": "runscheduler.sh &",
+        "COMMAND_REGEX": "transscheduler",
+        "SERVICE_NAME": "Scheduler"
+      }
+    ]
+  },
+  "DISPATCHER_MODULE": {
+    "INSTANCES": [
+      {
+        "NODE": "DISPATCHER_SERVER",
+        "LOCATION": "D:/Tc_Appl/tcsmoq30/dispatcher/Module/bin",
+        "SERVICE_TYPE": "WINSERVICE",
+        "COMMAND": "Teamcenter Dispatcher Module V14000.3.0.14_20231025.00",
+        "SERVICE_NAME": "Dispatcher_Module"
+      }
+    ]
+  },
+  "DISPATCHER_CLIENT": {
+    "INSTANCES": [
+      {
+        "NODE": "DISPATCHER_SERVER",
+        "LOCATION": "D:/Tc_Appl/tcsmoq30/dispatcher/DispatcherClient/bin",
+        "SERVICE_TYPE": "WINSERVICE",
+        "COMMAND": "Teamcenter DispatcherClient V14000.3.0.14_20231025.00",
+        "SERVICE_NAME": "Dispatcher_Client"
+      }
+    ]
+  },
+  "DC_ALL": {
+    "INSTANCES": "DC,PUBLISHER,REPO",
+    "Description": "Description content"
+  },
+  "DC": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/",
+        "COMMAND": "DC_Service",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmoq30/dc/webserver/temp"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "PUBLISHER": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/",
+        "COMMAND": "DC_RepoService_Publisher",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmoq30/dc/webserver/repotool/temp"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "REPO": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/",
+        "COMMAND": "DC_RepoService",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmoq30/dc/webserver/messaging/temp"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CRON": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER"
+      }
+    ]
+  },
+  "DEADPROCESS": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "FILTERS": "infodba,MUX",
+        "COMMAND": "",
+        "MAX_RETRIES": 3
+      },
+      {
+        "NODE": "BACKUP_AWC_ALL",
+        "FILTERS": "Tc_Appl\\tcsmoq30,Notepad++,explorer.exe",
+        "COMMAND": "",
+        "MAX_RETRIES": 3
+      }
+    ]
+  }
+}

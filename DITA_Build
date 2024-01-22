@@ -1,0 +1,746 @@
+/**
+    __description__     = 'This Job is designed to provide a user friendly Interface to easy access of Python Framework for PLM based Teamcenter Modules deployments.'
+    __author__          = 'Raghulraj Palanisamy & Asawari Deshpande'
+    __copyright__       = "© Copyright Siemens. All rights reserved"
+    __version__         = 0.1
+
+ */
+@Library('DITACI')_
+import com.lib.GlobalVars
+import com.lib.Utilities
+
+String AGENT_SERVER_TO_DEPLOY = null
+String AGENT_JENKINS_TO_SERVER_LNX = 'demchdc47xx'
+String AGENT_JENKINS_TO_SERVER_WIN = 'demchdc8xna'
+String TEAMCENTER_MODULES = ""
+String ZIP_WIN_LOCATION = ""
+String PACKAGE_CREATE_MESSAGE = ""
+String currentBuidWorkspace = null
+def resourcesConfig = null
+def parametersConfig = null
+def utils = null
+String INCOMING_WEBHOOK_URL = ""
+def GIT_PROJECT = ''
+def GIT_REPOURL = ''
+def SOURCE_BASE_LOCATION_WIN      = ''
+def TARGET_BASE_LOCATION_WIN      = ''
+def SOURCE_BASE_LOCATION_LNX      = ''
+def TARGET_BASE_LOCATION_LNX      = ''
+def SERVER_CODE_BASE_LOCATION_WIN = ''
+def SERVER_CODE_BASE_LOCATION_LNX = ''
+def SERVER_DLLS_LOCATION_WIN = ''
+def SERVER_SO_LOCATION_LNX = ''
+def TC_ROOT_LNX_DIR      = ''
+def TC_ROOT_WIN_DIR      = ''
+def SOFTWARE_VERSION = ''
+def WEEKLY_PACKAGE_NAME = ''
+def checkoutLocationWin = ''
+def checkoutLocationLnx = ''
+def BMIDE_PACKAGE_NAME_CMN = ""
+def BMIDE_PACKAGE_NAME_RI = ""
+def BMIDE_BIN_LOCATION_WIN = ""
+def BMIDE_TEMPLATE_LOCATION_WIN = ''
+def BMIDE_TEMPLATE_LOCATION_LNX = ''
+
+def packagesList = ['Common', 'RI']
+
+
+/* Pipeline JOB Setup required configurations */
+pipeline {
+
+    agent {
+        label AGENT_JENKINS_TO_SERVER_LNX
+    }
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        ansiColor('xterm')
+    }
+
+    stages {
+
+        stage('Checkout Deployment Framework from SMO_CI-CD') {			
+            steps {
+                script {
+                        cleanWs()
+                        git branch: 'ci-cd-dev',
+                        credentialsId: 'indodbaat47xx',
+                        url: 'git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/smo_ci-cd.git',
+                        changelog: false,
+                        poll: false
+                        currentBuidWorkspace = WORKSPACE
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ Checking-out of SMO_CI-CD project executed successfully ]======== ]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ Checking-out of SMO_CI-CD project execution failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+
+        stage ('Setup Choice Parameters'){
+            steps {
+                script {
+                    dir(currentBuidWorkspace)
+                    {
+                        // Enhance the Parameters
+                        parametersConfig = parametersPipeline([
+                            currentBuidWorkspace: currentBuidWorkspace,
+                            parametersEnable: ["GIT_BRANCH", "PACKAGE_NAME", "TC_VERSION", "TEAMCENTER_MODULES", "BUILD_PACKAGE","DEBUG_EXECUTION_MODE","NOTIFY_TEAMS_CHANNEL", "TARGET_TEAMS_CHANNELS", "PACKAGE_CREATE_MESSAGE" ]
+                        ])
+                        env.GLOBAL_EMAIL_OPTIONS = parametersConfig['emailConfig']['email_options']
+
+                        utils = new Utilities()
+                        resourcesConfig = configurations()
+
+                        if (utils.checkTargetName(params.TEAMCENTER_MODULES, 'All')) {
+                            TEAMCENTER_MODULES = utils.getMapValuesFromKey(parametersConfig['tcmodulesConfig']['tcmodule_options'], 'modules').join(',')
+                        } else if (utils.checkTargetName(params.TEAMCENTER_MODULES, 'Allwin')) { 
+                            TEAMCENTER_MODULES = utils.filterTargetName(utils.getMapValuesFromKey(parametersConfig['tcmodulesConfig']['tcmodule_options'], 'modules'), 'win').join(',')
+                        } else if (utils.checkTargetName(params.TEAMCENTER_MODULES, 'Alllnx')) { 
+                            TEAMCENTER_MODULES = utils.filterTargetName(utils.getMapValuesFromKey(parametersConfig['tcmodulesConfig']['tcmodule_options'], 'modules'), 'lnx').join(',')
+                        } else {
+                            TEAMCENTER_MODULES = params.TEAMCENTER_MODULES
+                        }
+
+                        
+                        GIT_PROJECT = resourcesConfig['SMO_GIT_PROJECT']
+                        GIT_REPOURL = resourcesConfig['SMO_GIT_URL']
+
+                        SOURCE_BASE_LOCATION_WIN = resourcesConfig['SOURCE_BASE_LOCATION_WIN']
+                        TARGET_BASE_LOCATION_WIN = resourcesConfig['TARGET_BASE_LOCATION_WIN']
+                        SOURCE_BASE_LOCATION_LNX = resourcesConfig['SOURCE_BASE_LOCATION_LNX']
+                        TARGET_BASE_LOCATION_LNX = resourcesConfig['TARGET_BASE_LOCATION_LNX']
+
+                        SERVER_CODE_BASE_LOCATION_WIN = resourcesConfig['SERVER_CODE_BASE_LOCATION_WIN']
+
+                        SERVER_CODE_BASE_LOCATION_LNX = resourcesConfig['SERVER_CODE_BASE_LOCATION_LNX']
+                        SERVER_DLLS_LOCATION_WIN = resourcesConfig['SERVER_DLLS_LOCATION_WIN']
+
+                        SERVER_SO_LOCATION_LNX = resourcesConfig['SERVER_SO_LOCATION_LNX']
+                        TC_ROOT_LNX_DIR = resourcesConfig['TC_ROOT_LNX_DIR']
+                        TC_ROOT_WIN_DIR = resourcesConfig['TC_ROOT_WIN_DIR']
+                        WEEKLY_PACKAGE_NAME = resourcesConfig['WEEKLY_PACKAGE_NAME']
+                        BMIDE_PACKAGE_NAME_CMN = resourcesConfig['BMIDE_PACKAGE_NAME_CMN']
+                        BMIDE_PACKAGE_NAME_RI = resourcesConfig['BMIDE_PACKAGE_NAME_RI']
+                        BMIDE_BIN_LOCATION_WIN = resourcesConfig['BMIDE_BIN_LOCATION_WIN']
+                        BMIDE_TEMPLATE_LOCATION_WIN = resourcesConfig['BMIDE_TEMPLATE_LOCATION_WIN']
+                        ZIP_WIN_LOCATION = resourcesConfig['ZIP_WIN_LOCATION']
+                        BMIDE_TEMPLATE_LOCATION_LNX = resourcesConfig['BMIDE_TEMPLATE_LOCATION_LNX']
+
+                        PACKAGE_CREATE_MESSAGE = params.PACKAGE_CREATE_MESSAGE
+
+                        PACKAGE_CREATE_MESSAGE = PACKAGE_CREATE_MESSAGE.replace('GIT_BRANCH', params.GIT_BRANCH)
+                        PACKAGE_CREATE_MESSAGE = PACKAGE_CREATE_MESSAGE.replace('TC_VERSION', params.TC_VERSION)
+                        
+
+                        echo "[DEBUG INFO] WORKSPACE : ${env.WORKSPACE}"
+                        echo "[DEBUG INFO] SMO_GIT_URL : ${GIT_REPOURL}"
+                        echo "[DEBUG INFO] SMO_GIT_PROJECT : ${GIT_PROJECT}"                        
+                        echo "[DEBUG INFO] GIT_BRANCH : ${params.GIT_BRANCH}"
+                        echo "[DEBUG INFO] TC_VERSION : ${params.TC_VERSION}"                     
+                        echo "[DEBUG INFO] PACKAGE_NAME : ${params.PACKAGE_NAME}" 
+                        echo "[DEBUG INFO] ZIP_WIN_LOCATION : ${ZIP_WIN_LOCATION}"                        
+                        echo "[DEBUG INFO] BUILD_PACKAGE : ${params.BUILD_PACKAGE}"
+                        echo "[DEBUG INFO] DEBUG_EXECUTION_MODE : ${params.DEBUG_EXECUTION_MODE}"
+                        echo "[DEBUG INFO] NOTIFY_TEAMS_CHANNEL : ${params.NOTIFY_TEAMS_CHANNEL}"
+                        echo "[DEBUG INFO] AGENT_SERVER_TO_DEPLOY: ${AGENT_SERVER_TO_DEPLOY}"
+                        echo "[DEBUG INFO] TEAMCENTER_MODULES: ${TEAMCENTER_MODULES}"  
+
+                        if (params.containsKey("SOFTWARE_VERSION")) { // SOFTWARE_VERSION Get from Parent Job (DITA_BuildDeployTest)
+                            echo "[DEBUG INFO] SOFTWARE_VERSION from Parent Job: ${params.SOFTWARE_VERSION}"
+                            SOFTWARE_VERSION = params.SOFTWARE_VERSION
+                        } else {
+                            SOFTWARE_VERSION = new Date().format("yyyyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+                            echo "[DEBUG INFO] SOFTWARE_VERSION from Current Build Job: " + SOFTWARE_VERSION
+                        }  
+
+                        if (params.PACKAGE_NAME == null) {
+                            error 'PACKAGE_NAME is Empty'
+                        }                    
+                    }
+                }
+            }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ Updating the parameters successfully ]======== ]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ Updating the parameters failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+
+        }
+
+        stage ('Checkout Teamcenter Project Parallel Execution') {
+            parallel {
+                stage ('Checkout Teamcenter Project on Windows Node') {
+                    agent {
+                        label AGENT_JENKINS_TO_SERVER_WIN
+                    }
+                    when {
+                        expression { utils.containsTargetName(TEAMCENTER_MODULES, 'win') }
+                    }
+                    steps {
+                        script {
+                            echo '[DEBUG INFO] Checking out Teamcenter Project from code.siemens.com on Windows Node....'
+                            echo '[DEBUG INFO] Checkout Git Branch:' + parametersConfig['branchesConfig']['branch_options']."${params.GIT_BRANCH}"[0]
+                            echo "[DEBUG INFO] Checkout Branch Name: ${params.GIT_BRANCH}"
+
+                            SOURCE_BASE_LOCATION_WIN = SOURCE_BASE_LOCATION_WIN + '\\' + GIT_PROJECT + '\\'  + params.GIT_BRANCH
+                            echo "[DEBUG INFO] SOURCE_BASE_LOCATION_WIN : ${SOURCE_BASE_LOCATION_WIN}"
+
+                            checkoutLocationWin = SOURCE_BASE_LOCATION_WIN                            
+
+                            dir(checkoutLocationWin) {
+                                deleteDir()
+                            }
+                            dir(checkoutLocationWin) {
+                                checkout([$class: 'GitSCM', branches: [[name: '*/' + parametersConfig['branchesConfig']['branch_options']."${params.GIT_BRANCH}"[0]]], 
+                                        extensions: [
+                                            [$class: 'GitLFSPull']
+                                            ],
+                                        userRemoteConfigs: [
+                                            [credentialsId: 'SMO_Credentials_Win', 
+                                            url: GIT_REPOURL ]]
+                                ])
+                            }
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ Checkout Teamcenter Project from code.siemens.com on Windows Node successfully ]======== ]"
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [ ========[ Checkout Teamcenter Project from code.siemens.com on Windows Node failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                
+                }
+
+                stage ('Checkout Teamcenter Project on Linux Node') {
+                    agent {
+                        label AGENT_JENKINS_TO_SERVER_LNX
+                    }
+                    when {
+                        expression { utils.containsTargetName(TEAMCENTER_MODULES, 'lnx') }
+                    }
+                    steps {
+                        script {
+                            echo '[DEBUG INFO] Checkout Teamcenter Project from code.siemens.com on Linux Node....'
+                            echo '[DEBUG INFO] Checkout Git Branch:' + parametersConfig['branchesConfig']['branch_options']."${params.GIT_BRANCH}"[0]
+                            echo "[DEBUG INFO] Checkout Branch Name: ${params.GIT_BRANCH}"
+
+                            SOURCE_BASE_LOCATION_LNX = SOURCE_BASE_LOCATION_LNX + '/' + GIT_PROJECT + '/'  + params.GIT_BRANCH 
+                            echo "[DEBUG INFO] SOURCE_BASE_LOCATION_LNX : ${SOURCE_BASE_LOCATION_LNX}"
+
+                            checkoutLocationLnx = SOURCE_BASE_LOCATION_LNX                     
+
+
+                            dir (checkoutLocationLnx) {
+                                checkout([$class: 'GitSCM', branches: [[name: '*/' + parametersConfig['branchesConfig']['branch_options']."${params.GIT_BRANCH}"[0]]], 
+                                        extensions: [
+                                            // [$class: 'GitLFSPull']
+                                            ],
+                                        userRemoteConfigs: [
+                                            [credentialsId: 'indodbaat47xx', 
+                                            url: GIT_REPOURL ]]
+                                        ])
+                            }
+
+                        }
+                    }
+                    post {
+                        success{
+                            echo "[DEBUG INFO] [ ========[ Checkout Teamcenter Project from code.siemens.com on Linux Node successfully ]======== ]"
+                        }
+                        failure{
+                            echo "[DEBUG INFO] [ ========[ Checkout Teamcenter Project from code.siemens.com on Linux Node failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+
+                }
+            }
+        }
+
+        stage ('Updating Env Specific Config on Parallel Execution Machine Based on Selection') {
+            parallel{
+                stage ('Updating Env Specific Config on Windows Node') {
+                    agent {
+                        label AGENT_JENKINS_TO_SERVER_WIN
+                        }
+                    steps {
+                        script {
+                            echo '[DEBUG INFO] Updating TC Build Config on Windows Node....'
+
+                            echo "TEAMCENTER_MODULES : ${params.TEAMCENTER_MODULES}"
+
+                            for(package_name in packagesList) {
+
+                                if (package_name.equals("Common")) {
+                                    def mediaTeamcenterFile = "${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN}\\install\\media_teamcenter_${BMIDE_PACKAGE_NAME_CMN}.xml"
+                                    def mediaTeamcenterFileText = readFile(file: mediaTeamcenterFile)
+                                    def mediaTeamcenterFileReplacedText = mediaTeamcenterFileText.replaceAll('<<<DITA.TC_VERSION>>>', "${params.TC_VERSION}")
+                                    writeFile(file: mediaTeamcenterFile, text: mediaTeamcenterFileReplacedText)
+                                }
+                                if (package_name.equals("RI")) {
+                                    def mediaTeamcenterFile = "${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_RI}\\install\\media_teamcenter_${BMIDE_PACKAGE_NAME_RI}.xml"
+                                    def mediaTeamcenterFileText = readFile(file: mediaTeamcenterFile)
+                                    def mediaTeamcenterFileReplacedText = mediaTeamcenterFileText.replaceAll('<<<DITA.TC_VERSION>>>', "${params.TC_VERSION}")
+                                    writeFile(file: mediaTeamcenterFile, text: mediaTeamcenterFileReplacedText)
+                                }
+
+                            }
+                        }
+                    }
+                }
+                stage ('Updating Env Specific Config on Linux Node') {
+                    agent {
+                        label AGENT_JENKINS_TO_SERVER_LNX
+                        }
+                    steps {
+                        script {
+                            echo '[DEBUG INFO] Updating TC Build Config on Linux Node....'
+                            echo "TEAMCENTER_MODULES : ${params.TEAMCENTER_MODULES}" 
+                        }
+                    }
+                }
+            }
+        }
+
+
+        stage ('TC Components Parallel Build') {
+            parallel
+            {
+                stage ('Build BMIDE Package') 
+                {
+					agent {
+                            label AGENT_JENKINS_TO_SERVER_WIN
+                        }
+                    when {
+                        expression { utils.checkTargetName(TEAMCENTER_MODULES, 'winBMIDE') }
+                    }
+                    steps 
+                    {
+                        script {
+                            def bmide_bin_location = "${BMIDE_BIN_LOCATION_WIN}\\${params.TC_VERSION}\\bin"
+
+                            for(package_name in packagesList) {
+
+                                echo "[DEBUG INFO] Package Name: ${package_name}"
+                                echo '[DEBUG INFO] Build TC Components on Windows Node.... Started'
+                                echo '[DEBUG INFO] SOFTWARE_VERSION :: ' + SOFTWARE_VERSION
+                               
+
+                                def smoVersionFile = "${checkoutLocationWin}\\${package_name}\\02_tc_configuration\\15_preferences\\override\\site\\smo_version_string.xml"
+                                echo '[DEBUG INFO] smoVersionFile :: ' + smoVersionFile
+                                def smoVersionFileText = readFile(file: smoVersionFile)
+                                echo '[DEBUG INFO] smoVersionFileText :: ' + smoVersionFileText
+
+                                if (package_name.equals("Common")) {                                   
+                                    echo '[DEBUG INFO] GIT_PROJECT :: CMN_' + params.GIT_BRANCH
+                                    WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'CMN' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+                                    PACKAGE_CREATE_MESSAGE = PACKAGE_CREATE_MESSAGE.replace('CMN_PACKAGE_NAME', WEEKLY_PACKAGE_NAME)
+                                    echo '[DEBUG INFO] WEEKLY_PACKAGE_NAME :: ' + WEEKLY_PACKAGE_NAME
+                                    bat("${bmide_bin_location}\\bmide_generate_package.bat -projectLocation=${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN} -packageLocation=${checkoutLocationWin}\\${package_name}\\01_bmide -dependencyTemplateFolder=${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH} -softwareVersion=${SOFTWARE_VERSION} -buildVersion=1 -allPlatform -log=${checkoutLocationWin}\\${package_name}\\01_bmide\\${WEEKLY_PACKAGE_NAME}_bmide.log")
+                                    bat ("${ZIP_WIN_LOCATION} ${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN}_all_${SOFTWARE_VERSION}_1_${params.TC_VERSION}\\artifacts\\sm4smocommon_template.zip -o${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH} sm4smocommon_template.xml -r -y")
+                                    bat ("${ZIP_WIN_LOCATION} ${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN}_all_${SOFTWARE_VERSION}_1_${params.TC_VERSION}\\artifacts\\sm4smocommon_template.zip -o${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH} sm4smocommon_dependency.xml -r -y")
+                                    smoVersionFileText = (smoVersionFileText =~ />-</).replaceFirst(">${WEEKLY_PACKAGE_NAME}<")      
+                                    echo '[DEBUG INFO] REPLACEMENT SUCCESSFUL :: ' + WEEKLY_PACKAGE_NAME                                        
+                                }
+                                if (package_name.equals("RI")) {
+                                    echo '[DEBUG INFO] GIT_PROJECT :: RI_' + params.GIT_BRANCH
+                                    WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'RI' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+                                    PACKAGE_CREATE_MESSAGE = PACKAGE_CREATE_MESSAGE.replace('RI_PACKAGE_NAME', WEEKLY_PACKAGE_NAME)
+                                    echo '[DEBUG INFO] WEEKLY_PACKAGE_NAME :: ' + WEEKLY_PACKAGE_NAME
+                                    bat("${bmide_bin_location}\\bmide_generate_package.bat -projectLocation=${checkoutLocationWin}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_RI} -packageLocation=${checkoutLocationWin}\\${package_name}\\01_bmide -dependencyTemplateFolder=${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH} -softwareVersion=${SOFTWARE_VERSION} -buildVersion=1 -allPlatform -log=${checkoutLocationWin}\\${package_name}\\01_bmide\\${WEEKLY_PACKAGE_NAME}_bmide.log")
+                                    smoVersionFileText = (smoVersionFileText =~ />-</).replaceFirst(">${WEEKLY_PACKAGE_NAME}<")
+                                    echo '[DEBUG INFO] REPLACEMENT SUCCESSFUL :: ' + WEEKLY_PACKAGE_NAME
+                                }
+                                writeFile(file: smoVersionFile, text: smoVersionFileText)
+                                echo '[DEBUG INFO] Build TC Components on Windows Node.... Finished'
+
+                            }
+                       }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ TC Configuration and Stash Build moved to Share Location successfully ]======== ]"
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ TC Configuration and Stash Build moved to Share Location failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+                stage ('Build lnx') 
+                {
+					agent {
+						label AGENT_JENKINS_TO_SERVER_LNX
+					}
+                    when {
+                        expression { (utils.checkTargetName(TEAMCENTER_MODULES, 'lnxLibs') || utils.checkTargetName(TEAMCENTER_MODULES, 'lnxBmideSos')) }
+                    }
+					steps {
+                        script {
+                            if (utils.checkTargetName(TEAMCENTER_MODULES, 'lnxLibs')) {
+                                echo '[DEBUG INFO] Build lnxLibs on Linux Node.... Started'
+
+                                for(package_name in packagesList) {
+                                    def buildfile = SOURCE_BASE_LOCATION_LNX+'/' + package_name + '/' +SERVER_CODE_BASE_LOCATION_LNX+'/build_lnx64.sh'
+                                    
+                                    echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                    if (fileExists(buildfile)) 
+                                    {
+                                        echo '[DEBUG INFO] Begin Build SO Files'
+                                        sh """
+                                        export TC_ROOT=${TC_ROOT_LNX_DIR}/${params.TC_VERSION}/tcroot/lnx64
+                                        chmod -R 0755 ${SOURCE_BASE_LOCATION_LNX}/${package_name}
+                                        cd ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_CODE_BASE_LOCATION_LNX}
+                                        ./build_lnx64.sh > lnxSOs.log
+                                        mkdir -p ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_SO_LOCATION_LNX}
+                                        cp ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_CODE_BASE_LOCATION_LNX}/output/*.so ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_SO_LOCATION_LNX}
+                                        """
+                                    }
+                                    else
+                                    {
+                                        echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                    }    
+                                }
+
+                            }
+
+                            if (utils.checkTargetName(TEAMCENTER_MODULES, 'lnxBmideSos')) {
+                                echo '[DEBUG INFO] Build lnxBmideSos on Linux Node.... Started'
+                                for(package_name in packagesList) {
+                                    if (package_name.equals("Common")) {
+                                        def buildfile = SOURCE_BASE_LOCATION_LNX + '/' + package_name +'/01_bmide/'+ BMIDE_PACKAGE_NAME_CMN+'/build_lnx64.sh'
+                                        echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                        if (fileExists(buildfile)) {
+                                            echo '[DEBUG INFO] Begin Bmide Linux Bmide SO Files'
+                                            sh """
+                                            export TC_ROOT=${TC_ROOT_LNX_DIR}/${params.TC_VERSION}/tcroot/lnx64
+                                            export BMIDE_TEMPLATES_DIR=${BMIDE_TEMPLATE_LOCATION_LNX}/${params.GIT_BRANCH}
+                                            export SMO_SM4_SERVER_BASEPATH=${SOURCE_BASE_LOCATION_LNX}/${package_name}/04_tc_customization/01_server_customization/SMO_SM4_Server
+                                            chmod -R 0755 ${SOURCE_BASE_LOCATION_LNX}/${package_name}
+                                            cd ${SOURCE_BASE_LOCATION_LNX}/${package_name}/01_bmide/sm4smocommon
+                                            ./build_lnx64.sh > lnxbmideSOs.log
+                                            cp ${SOURCE_BASE_LOCATION_LNX}/${package_name}/01_bmide/${BMIDE_PACKAGE_NAME_CMN}/output/lnx64/lib/*.so ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_SO_LOCATION_LNX}
+                                            """
+                                        }  
+                                        else
+                                        {
+                                            echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                        }
+                                    }
+
+                                    if (package_name.equals("RI")) {
+                                        def buildfile = SOURCE_BASE_LOCATION_LNX + '/' + package_name +'/01_bmide/'+ BMIDE_PACKAGE_NAME_RI+'/build_lnx64.sh'
+                                        echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                        if (fileExists(buildfile)) {
+                                            echo '[DEBUG INFO] Begin Bmide Linux Bmide SO Files'
+                                            sh """
+                                            export TC_ROOT=${TC_ROOT_LNX_DIR}/${params.TC_VERSION}/tcroot/lnx64
+                                            export BMIDE_TEMPLATES_DIR=${BMIDE_TEMPLATE_LOCATION_LNX}
+                                            export SMO_SM4_SERVER_BASEPATH=${SOURCE_BASE_LOCATION_LNX}/${package_name}/04_tc_customization/01_server_customization/SMO_SM4_Server
+                                            chmod -R 0755 ${SOURCE_BASE_LOCATION_LNX}/${package_name}
+                                            cd ${SOURCE_BASE_LOCATION_LNX}/${package_name}/01_bmide/${BMIDE_PACKAGE_NAME_RI}
+                                            ./build_lnx64.sh > lnxbmideSOs.log
+                                            cp ${SOURCE_BASE_LOCATION_LNX}/${package_name}/01_bmide/${BMIDE_PACKAGE_NAME_RI}/output/lnx64/lib/*.so ${SOURCE_BASE_LOCATION_LNX}\\${package_name}\\${SERVER_SO_LOCATION_LNX}
+                                            """
+                                        }
+                                        else
+                                        {
+                                            echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                        }
+                                    }
+                                }
+
+                            }
+                            echo '[DEBUG INFO] End Bmide Linux Bmide SO Files'
+                            echo '[DEBUG INFO] End Build SO Files'
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ BMIDE Generate Package Utility successfully ]======== ]"
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ BMIDE Generate Package Utility failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+
+                    }
+                }
+
+                stage ('build win') 
+                {
+					agent {
+						label AGENT_JENKINS_TO_SERVER_WIN
+						}
+                    when {
+                        expression { 
+                            (utils.checkTargetName(TEAMCENTER_MODULES, 'winLibs') || utils.checkTargetName(TEAMCENTER_MODULES, 'winBmideDlls')) 
+                        }
+                    }
+                    steps {
+                        script {
+                            if (utils.checkTargetName(TEAMCENTER_MODULES, 'winLibs')) {
+                                echo '[DEBUG INFO] Build winLibs on Linux Node.... Started'
+                                for(package_name in packagesList) {
+                                    
+                                    
+                                    def buildfile = SOURCE_BASE_LOCATION_WIN + '/' + package_name +'/'+SERVER_CODE_BASE_LOCATION_WIN+'\\build_wntx64.bat'
+                                    echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                    if (fileExists(buildfile)) {
+                                        echo '[DEBUG INFO] Build winLibs Files'
+                                        bat """
+
+                                            SET TC_ROOT=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64
+                                            SET TC_BIN=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64\\bin
+                                            SET VCVARS_FILE=C:\\Apps\\VS2022\\VC\\Auxiliary\\Build\\vcvarsall.bat
+                                            cd ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_CODE_BASE_LOCATION_WIN}
+                                            call build_wntx64.bat -m
+                                        """
+
+                                        echo '[DEBUG INFO] Copy of Server DLL Files Started'
+                                        bat """
+                                            mkdir ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_DLLS_LOCATION_WIN}
+                                            xcopy ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_CODE_BASE_LOCATION_WIN}\\output\\*.dll ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_DLLS_LOCATION_WIN}\\ /Y
+                                        """
+                                        echo '[DEBUG INFO] Copy of Server DLL Files Finished'
+                                    } 
+                                    else
+                                    {
+                                        echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                    }
+                                    
+                                }
+
+                            }
+                            if (utils.checkTargetName(TEAMCENTER_MODULES, 'winBmideDlls')) {
+                                echo '[DEBUG INFO] Build winBmideDlls on Linux Node.... Started'
+                                for(package_name in packagesList) {
+                                    echo '[DEBUG INFO] Build winBmideDlls Files'
+                                    if (package_name.equals("Common")) {
+                                        def buildfile = SOURCE_BASE_LOCATION_WIN + '\\' + package_name +'\\01_bmide\\'+ BMIDE_PACKAGE_NAME_CMN+'\\build_wntx64.bat'
+                                        echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                        if (fileExists(buildfile)) {
+                                            bat """
+                                                SET TC_ROOT=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64
+                                                SET TC_BIN=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64\\bin
+                                                SET VCVARS_FILE=C:\\Apps\\VS2022\\VC\\Auxiliary\\Build\\vcvarsall.bat
+                                                SET BMIDE_TEMPLATES_DIR=${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH}
+                                                set SMO_SM4_SERVER_BASEPATH=${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_CODE_BASE_LOCATION_WIN}
+                                                cd ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN}
+                                                call build_wntx64.bat
+                                            """
+                                            echo '[DEBUG INFO] Copy of BMIDE DLL Files Started'
+                                            bat """
+                                                xcopy ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_CMN}\\output\\wntx64\\lib\\*.dll ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_DLLS_LOCATION_WIN}\\ /Y
+                                                """
+                                            echo '[DEBUG INFO] Copy of BMIDE DLL Files Finished'
+                                        } 
+                                        else 
+                                        {
+                                            echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                        }
+                                    }
+
+                                    if (package_name.equals("RI")) {                                        
+                                        def buildfile = SOURCE_BASE_LOCATION_WIN + '\\' + package_name +'\\01_bmide\\'+ BMIDE_PACKAGE_NAME_RI+'\\build_wntx64.bat'
+                                        echo '[DEBUG INFO] checking buildfile '+buildfile+' existance'
+                                        if (fileExists(buildfile)) {
+                                            bat """
+                                                SET TC_ROOT=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64
+                                                SET TC_BIN=${TC_ROOT_WIN_DIR}\\${params.TC_VERSION}\\tcroot\\wntx64\\bin
+                                                SET VCVARS_FILE=C:\\Apps\\VS2022\\VC\\Auxiliary\\Build\\vcvarsall.bat
+                                                SET BMIDE_TEMPLATES_DIR=${BMIDE_TEMPLATE_LOCATION_WIN}\\${params.GIT_BRANCH}
+                                                set SMO_SM4_SERVER_BASEPATH=${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_CODE_BASE_LOCATION_WIN}
+                                                cd ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_RI}
+                                                call build_wntx64.bat
+                                            """
+                                            echo '[DEBUG INFO] Copy of BMIDE DLL Files Started'
+                                            bat """
+                                                xcopy ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\01_bmide\\${BMIDE_PACKAGE_NAME_RI}\\output\\wntx64\\lib\\*.dll ${SOURCE_BASE_LOCATION_WIN}\\${package_name}\\${SERVER_DLLS_LOCATION_WIN}\\ /Y
+                                            """
+                                            echo '[DEBUG INFO] Copy of BMIDE DLL Files Finished'
+                                        } 
+                                        else 
+                                        {
+                                            echo '[DEBUG INFO] buildfile '+buildfile+' not found skipping build'
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ WinBMIDEDLL & WinLibs Build successfully ]======== ]"
+                            // notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - SUCCESS- #${env.BUILD_NUMBER}", body:PACKAGE_CREATE_MESSAGE, options: 'package_create',  profile: 'SystemAdmin'])
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ WinBMIDEDLL & WinLibs Build failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+
+                    }
+                }
+            
+            }
+        }
+
+
+        stage ('Copy Package Windows') {
+            agent {
+                label AGENT_JENKINS_TO_SERVER_WIN
+                }
+            when {
+                expression { env.BUILD_PACKAGE.equals("true") }
+                }
+            steps {
+                script {
+                    echo '[DEBUG INFO] BUILD_PACKAGE:' + env.BUILD_PACKAGE
+                    echo '[DEBUG INFO] Copy TC Configuration into Stash Build Package Win....'
+                    utils = new Utilities()
+                    for(package_name in packagesList) {
+
+                        if (package_name.equals("Common")) {
+
+                            def sourceDir = SOURCE_BASE_LOCATION_WIN + '\\' + package_name
+
+                            WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'CMN' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+
+                            def targetDir =  TARGET_BASE_LOCATION_WIN + '\\' + 'SMO' + '\\' + params.GIT_BRANCH + '\\' + 'CMN' + '\\' + WEEKLY_PACKAGE_NAME
+
+                            robocopycmd = "${sourceDir} ${targetDir} /XF .gitignore *.log README.md delete_me_when_putting_files_here.txt /XD .git ri-aw-e2e ${BMIDE_PACKAGE_NAME_CMN} ${BMIDE_PACKAGE_NAME_RI} Documentation SMO_SM4_Server /E /NJH /NJS > ${sourceDir}\\${WEEKLY_PACKAGE_NAME}_package_copy.log"
+                            // def status = utils.robocopy(robocopycmd)
+                            // if (status < 0 || status > 3) {
+                            //     error("ROBOCOPY failed")
+                            // }
+                            def status = bat returnStatus: true, script: "ROBOCOPY ${robocopycmd}"
+                            println "ROBOCOPY returned ${status}"
+                            if (status < 0 || status > 3)
+                            {
+                                error("ROBOCOPY failed")
+                            }
+                        }
+                        if (package_name.equals("RI")){
+                            def sourceDir = SOURCE_BASE_LOCATION_WIN + '\\' + package_name
+
+                            WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'RI' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+
+                            def targetDir =  TARGET_BASE_LOCATION_WIN + '\\' + 'SMO' + '\\' + params.GIT_BRANCH + '\\' + 'RI' + '\\'  + WEEKLY_PACKAGE_NAME
+
+                            robocopycmd = "${sourceDir} ${targetDir} /XF .gitignore *.log README.md delete_me_when_putting_files_here.txt /XD .git ri-aw-e2e ${BMIDE_PACKAGE_NAME_CMN} ${BMIDE_PACKAGE_NAME_RI} Documentation SMO_SM4_Server /E /NJH /NJS > ${sourceDir}\\${WEEKLY_PACKAGE_NAME}_package_copy.log"
+                            // def status = utils.robocopy(robocopycmd)
+                            // if (status < 0 || status > 3) {
+                            //     error("ROBOCOPY failed")
+                            // }
+                            def status = bat returnStatus: true, script: "ROBOCOPY ${robocopycmd}"
+                            println "ROBOCOPY returned ${status}"
+                            if (status < 0 || status > 3)
+                            {
+                                error("ROBOCOPY failed")
+                            }
+
+                        }
+                    }
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ TC Configuration and Stash Build moved to Share Location successfully ]======== ]"
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ TC Configuration and Stash Build moved to Share Location failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage ('Copy Package Lnx') {
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+                }
+            when {
+                expression { env.BUILD_PACKAGE.equals("true") }
+                }
+            steps {
+                script {
+                    echo '[DEBUG INFO] Copy TC Configuration into Stash Build Package Lnx....'
+                    for(package_name in packagesList) {
+
+                        if (package_name.equals("Common")) {                            
+                            File dir = new File(SOURCE_BASE_LOCATION_LNX +'/' + package_name +'/'+SERVER_SO_LOCATION_LNX)
+                            if(dir.exists())
+                            {
+                                WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'CMN' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+
+                                sh """
+                                mkdir -p ${TARGET_BASE_LOCATION_LNX}/SMO/${params.GIT_BRANCH}/CMN/${WEEKLY_PACKAGE_NAME}/04_tc_customization/01_server_customization/binaries/so_files
+                                cp ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_SO_LOCATION_LNX}/*.so ${TARGET_BASE_LOCATION_LNX}/SMO/${params.GIT_BRANCH}/CMN/${WEEKLY_PACKAGE_NAME}/04_tc_customization/01_server_customization/binaries/so_files
+                                """
+                            }
+                            else
+                            {
+                                echo '[DEBUG INFO] No Linux binary directory found skipping to copy binaries'
+                            }                        
+                        }
+                        if (package_name.equals("RI")) {
+                            File dir = new File(SOURCE_BASE_LOCATION_LNX +'/' + package_name +'/'+SERVER_SO_LOCATION_LNX)
+                            if(dir.exists())
+                            {
+                                WEEKLY_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'RI' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+                
+                                sh """
+                                mkdir -p ${TARGET_BASE_LOCATION_LNX}/SMO/${params.GIT_BRANCH}/RI/${WEEKLY_PACKAGE_NAME}/04_tc_customization/01_server_customization/binaries/so_files
+                                cp ${SOURCE_BASE_LOCATION_LNX}/${package_name}/${SERVER_SO_LOCATION_LNX}/*.so ${TARGET_BASE_LOCATION_LNX}/SMO/${params.GIT_BRANCH}/RI/${WEEKLY_PACKAGE_NAME}/04_tc_customization/01_server_customization/binaries/so_files
+                                """
+                            }
+                            else
+                            {
+                                echo '[DEBUG INFO] No Linux binary directory found skipping to copy binaries'
+                            }                        
+                        }
+        
+                    }
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ TC Configuration and Stash Build moved to Share Location successfully ]======== ]"
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ TC Configuration and Stash Build moved to Share Location failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.GIT_BRANCH} - ${params.TC_VERSION} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+
+        stage ('Email Notification') {
+                steps {
+                    script {
+                        echo '[DEBUG INFO] Send Email Notification to Leads and Developers'
+                    }
+                }
+        }
+
+    }
+
+
+}   

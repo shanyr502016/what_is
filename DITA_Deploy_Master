@@ -1,0 +1,784 @@
+/**
+    __description__     = 'This Job is designed to provide a user friendly Interface to easy access of Python Framework for PLM based Teamcenter Modules deployments.'
+    __author__          = 'Raghulraj Palanisamy & Asawari Deshpande'
+    __copyright__       = "© Copyright Siemens. All rights reserved"
+    __version__         = 0.1
+
+ */
+@Library('DITACI')_
+import com.lib.GlobalVars
+import com.lib.Utilities
+
+String AGENT_SERVER_TO_DEPLOY = null
+String AGENT_JENKINS_TO_SERVER_LNX = 'demchdc47xx'
+String DITA_SCRIPTS_PATH = ""
+String DITA_MANAGE_SCRIPTS = ""
+String DITA_DEPLOY_SCRIPTS = ""
+String DEPLOYMENT_OPTION = ""
+String CMN_PACKAGE_LOCATION = ""
+String RI_PACKAGE_LOCATION = ""
+Boolean COMBINED_JOB = false
+String INCOMING_WEBHOOK_URL = ""
+
+def resourcesConfig = null
+def parametersConfig = null
+def branchesConfig = null
+def targetNode = null
+def utils = null
+String currentBuidWorkspace = null
+String PACKAGE_LIST_TO_DEPLOY = null
+def SUB_TARGETS_DEPLOYMENT_OPTIONS = null
+/* Pipeline JOB Setup required configurations */
+pipeline
+{
+    agent {
+        label AGENT_JENKINS_TO_SERVER_LNX
+    }
+    environment {
+        currentBuidWorkspace = ''      
+    }
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        timeout(time: 600, unit: 'MINUTES')
+        ansiColor('xterm')
+        // disableConcurrentBuilds()
+    }
+    stages {
+        stage('Checkout Deployment Framework from SMO_CI-CD') {
+            steps {
+                script {
+                    echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out  ]======== ]'
+                    cleanWs()
+                    git branch: 'ci-cd-dev',
+                    credentialsId: 'infodbaat47xx',
+                    url: 'git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/smo_ci-cd.git',
+                    changelog: false,
+                    poll: false
+                    currentBuidWorkspace = WORKSPACE
+                }
+            }
+            post {
+                    success {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project executed successfully ]======== ]'
+                    }
+                    failure {
+                        echo '[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project execution failed ]======== ]'
+                    }
+            }
+        }
+
+        stage('Setup Choice Parameters') {
+            steps {
+                script {                    
+                    dir(currentBuidWorkspace)
+                    {
+                        // Enhance the Parameters
+                        parametersConfig = parametersPipeline([
+                            currentBuidWorkspace: currentBuidWorkspace,
+                            parametersEnable: ["TARGET_ENVIRONMENT", "DEPLOYMENT_OPTION", "SUB_TARGETS_DEPLOYMENT", 
+                                                "CMN_CHECK_IF_PACKAGE_EXISTS", "CMN_PACKAGE_NAME", "BU_CHECK_IF_PACKAGE_EXISTS", 
+                                                "BU_PACKAGE_NAME", "BACKUP_FOLDER_NAME", "START_DEPLOY_FROM_BEGINNING","TIME_DELAY", "NOTIFY_TEAMS_CHANNEL",
+                                                "TARGET_TEAMS_CHANNELS", "SYSTEM_DOWN_MESSAGE", "SYSTEM_UP_MESSAGE"]
+                        ])                        
+                        
+                    }
+                }
+            }
+        }
+
+        stage('Validate Packages') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            steps {
+                script {
+                    echo '[DEBUG INFO] DITA Prepare Deployment'
+                    utils = new Utilities()
+                    resourcesConfig = configurations()
+                    AGENT_SERVER_TO_DEPLOY = parametersConfig['environmentConfig']['environment_options']."${params.TARGET_ENVIRONMENT}"[0]
+                    targetNode = utils.getHostNameFromLabels(AGENT_SERVER_TO_DEPLOY)
+                    if (params.TARGET_ENVIRONMENT.equals('TCSMOP10')) {
+                        branchesConfig = branches([
+                            configuration: resourcesConfig,
+                            parametersConfig: parametersConfig,
+                            shareLocation: resourcesConfig['SMO_SHARE_PROD_PATH'],
+                            commonPackageName: params.CMN_PACKAGE_NAME,
+                            buPackageName: params.BU_PACKAGE_NAME
+                        ])
+                    } else {
+                        branchesConfig = branches([
+                            configuration: resourcesConfig,
+                            parametersConfig: parametersConfig,
+                            shareLocation: resourcesConfig['SMO_SHARE_PATH'],
+                            commonPackageName: params.CMN_PACKAGE_NAME,
+                            buPackageName: params.BU_PACKAGE_NAME
+                        ])
+                    }
+
+                    DITA_SCRIPTS_PATH = branchesConfig['DITA_SCRIPTS_PATH']
+                    DITA_MANAGE_SCRIPTS = branchesConfig['DITA_MANAGE_SCRIPTS']
+                    DITA_DEPLOY_SCRIPTS = branchesConfig['DITA_DEPLOY_SCRIPTS']
+                    PACKAGE_LIST_TO_DEPLOY = branchesConfig['PACKAGE_LIST_TO_DEPLOY']
+                    CMN_PACKAGE_LOCATION = branchesConfig['CMN_PACKAGE_LOCATION']
+                    RI_PACKAGE_LOCATION = branchesConfig['RI_PACKAGE_LOCATION']
+
+                    SUB_TARGETS_DEPLOYMENT_OPTIONS = utils.getMatchingTargets(parametersConfig, params.SUB_TARGETS_DEPLOYMENT.split(','))
+                    if (utils.checkDeployTarget(params.DEPLOYMENT_OPTION, 'All')) {
+                        DEPLOYMENT_OPTION = utils.getMapValuesFromKey(parametersConfig['deploymenttargetsConfig']['deployment_options'], params.TARGET_ENVIRONMENT).join(',')
+                    } else{
+                        DEPLOYMENT_OPTION = params.DEPLOYMENT_OPTION
+                    }
+                    echo "[DEBUG INFO] COMMON_PACKAGE_NAME : ${params.CMN_PACKAGE_NAME}"
+                    echo "[DEBUG INFO] BU_PACKAGE_NAME : ${params.BU_PACKAGE_NAME}"
+                    echo "[DEBUG INFO] TARGET_ENVIRONMENT : ${params.TARGET_ENVIRONMENT}"
+                    echo "[DEBUG INFO] DEPLOYMENT_OPTION : ${DEPLOYMENT_OPTION}"
+                    echo "[DEBUG INFO] SUB_TARGETS_DEPLOYMENT_OPTIONS: ${SUB_TARGETS_DEPLOYMENT_OPTIONS}"
+                    echo "[DEBUG INFO] AGENT_SERVER_TO_DEPLOY: ${AGENT_SERVER_TO_DEPLOY}"
+                    echo "[DEBUG INFO] START_DEPLOY_FROM_BEGINNING : ${params.START_DEPLOY_FROM_BEGINNING}"
+                    echo "[DEBUG INFO] PACKAGE_LIST_TO_DEPLOY: ${PACKAGE_LIST_TO_DEPLOY}"
+                    echo "[DEBUG INFO] BACKUP_FOLDER_NAME: ${params.BACKUP_FOLDER_NAME}"                    
+                    echo "[DEBUG INFO] TIME_DELAY To Start: ${params.TIME_DELAY}"
+                    echo "[DEBUG INFO] DITA_MANAGE_SCRIPTS: ${DITA_MANAGE_SCRIPTS}"
+                    echo "[DEBUG INFO] DITA_DEPLOY_SCRIPTS: ${DITA_DEPLOY_SCRIPTS}"
+                    // if (PACKAGE_LIST_TO_DEPLOY == null) {
+                    //     error 'PACKAGE_LIST_TO_DEPLOY is Empty'
+                    // }             
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy ${env.STAGE_NAME} on ${AGENT_SERVER_TO_DEPLOY} successfully ]========]"
+                }
+                failure {
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy ${env.STAGE_NAME} on ${AGENT_SERVER_TO_DEPLOY}  failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+        stage('Stop System') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Stop_System') }
+            }
+            steps {
+                script {
+                    if (params.containsKey("COMBINED_JOB")) {
+                        COMBINED_JOB = params.COMBINED_JOB
+                        echo "[DEBUG INFO] COMBINED_JOB from Triggered By Parent Job: ${params.COMBINED_JOB}"
+                    }
+                    if (COMBINED_JOB == false) {
+                        def targetJobParams = [
+                        [$class: 'StringParameterValue', name: 'TARGET_ENVIRONMENT', value: params.TARGET_ENVIRONMENT],
+                        [$class: 'StringParameterValue', name: 'STARTSTOP_OPTION', value: 'Stop_System'],
+                        [$class: 'StringParameterValue', name: 'TIME_DELAY', value: params.TIME_DELAY],                        
+                        [$class: 'BooleanParameterValue', name: 'COMBINED_JOB', value: COMBINED_JOB],
+                        [$class: 'BooleanParameterValue', name: 'NOTIFY_TEAMS_CHANNEL', value: params.NOTIFY_TEAMS_CHANNEL],
+                        [$class: 'StringParameterValue', name: 'TARGET_TEAMS_CHANNELS', value: params.TARGET_TEAMS_CHANNELS],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_DOWN_MESSAGE', value: params.SYSTEM_DOWN_MESSAGE],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_UP_MESSAGE', value: params.SYSTEM_UP_MESSAGE]
+                        ]
+                        def targetJob = build(job: 'DITA_StartStop', parameters: targetJobParams)
+
+                        currentBuild.result = targetJob.result 
+                    }               
+                                     
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Backup System') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Backup_Env') }
+            }
+            steps {
+                script {   
+                    backupPipeline([parametersConfig: parametersConfig, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, BACKUP_FOLDER_NAME: params.BACKUP_FOLDER_NAME])                    
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Deploy PreBMIDE') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Deploy_PreBMIDE') }
+            }
+            steps {
+                script {                    
+                    echo '[DEBUG INFO] Deploy PreBMIDE'
+                    preBMIDEPipeline([parametersConfig: parametersConfig, SUB_TARGETS_DEPLOYMENT_OPTIONS: SUB_TARGETS_DEPLOYMENT_OPTIONS, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY])
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+        stage('DC_Export_Env') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_Export_Env') }
+            }
+            steps {
+                script {                    
+                    dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_Export_Env" ])                                     
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+        stage('DC_Generate_Scripts') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_Generate_Scripts') }
+            }
+            steps {
+                script {                       
+                    dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_Generate_Scripts" ])                 
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('DC_ExecuteScripts_Corp') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_Corp') }
+            }
+            steps {
+                script { 
+                    dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_Corp" ])
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('DC_ExecuteScripts_CorpAll') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_CorpAll') }
+            }
+            steps {
+                script {            
+                    dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_CorpAll" ])
+                
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+
+        stage('DC_ExecuteScripts_Volumes') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_Volumes') }
+            }
+            steps {
+                script {
+                    dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_Volumes" ])                  
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+
+
+                stage('DC_ExecuteScripts_AWC') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_AWC') }
+                    }
+                    steps {
+                        script {
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_AWC" ])                    
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+                stage('DC_ExecuteScripts_AWCSOLR') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_AWCSOLR') }
+                    }
+                    steps {
+                        script {
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_AWCSOLR" ])                    
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+
+
+                stage('DC_ExecuteScripts_DispatcherWin') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_DispatcherWin') }
+                    }
+                    steps {
+                        script {  
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_DispatcherWin" ])                  
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+                stage('DC_ExecuteScripts_DispatcherLnx') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_DispatcherLnx') }
+                    }
+                    steps {
+                        script {
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY,stagename: "DC_ExecuteScripts_DispatcherLnx" ])                   
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+
+                stage('DC_ExecuteScripts_AIG') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_AIG') }
+                    }
+                    steps {
+                        script {
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, stagename: "DC_ExecuteScripts_AIG"])                 
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+
+                stage('DC_ExecuteScripts_Batch') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_Batch') }
+                    }
+                    steps {
+                        script {        
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, stagename: "DC_ExecuteScripts_Batch"]) 
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+                stage('DC_ExecuteScripts_RemoteDeployWin') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_RemoteDeployWin') }
+                    }
+                    steps {
+                        script { 
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, stagename: "DC_ExecuteScripts_RemoteDeployWin" ])                  
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+                stage('DC_ExecuteScripts_RemoteDeployLnx') {
+                    failFast true
+                    agent {
+                        label AGENT_SERVER_TO_DEPLOY
+                    }
+                    when {
+                        expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'DC_ExecuteScripts_RemoteDeployLnx') }
+                    }
+                    steps {
+                        script { 
+                            dcscriptPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS,SUB_TARGETS_DEPLOYMENT_OPTIONS:SUB_TARGETS_DEPLOYMENT_OPTIONS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, stagename: "DC_ExecuteScripts_RemoteDeployLnx"])                   
+                        }
+                    }
+                    post {
+                        success {
+                            echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                        }
+                        failure {
+                            echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                            notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                        }
+                    }
+                }
+
+
+
+        
+
+        stage('Deploy_PostBMIDE') { 
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Deploy_PostBMIDE') }
+            }
+            steps {
+                script {
+                    echo '[DEBUG INFO] Deploy_PostBMIDE'
+                    postBMIDEPipeline([parametersConfig: parametersConfig, SUB_TARGETS_DEPLOYMENT_OPTIONS: SUB_TARGETS_DEPLOYMENT_OPTIONS, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY])  
+                }
+            } 
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Deploy_AWCFileRepo') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Deploy_AWCFileRepo') }
+            }
+            steps {
+                script {
+                    echo '[DEBUG INFO] Deploy_AWCFileRepo'
+                    String AWCFileRepoCopy_CMD = "${DITA_DEPLOY_SCRIPTS} -m AWC.fileRepoCopy -p ${PACKAGE_LIST_TO_DEPLOY} -d"
+                    runCommand([command: AWCFileRepoCopy_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename:"Deploy_AWCFileRepo"])
+                }
+            }            
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('AIG Deploy') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+            expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Deploy_AIG') }
+            }
+            steps {
+                script {                    
+                    echo '[DEBUG INFO] Deploy_AIG'                   
+                    String AIGDeploy_CMD = "${DITA_DEPLOY_SCRIPTS} -m AIG.deploy -p ${PACKAGE_LIST_TO_DEPLOY} -d"
+                    String AIGDeploySNC_CMD = "${DITA_DEPLOY_SCRIPTS} -m AIG.SNC -p ${PACKAGE_LIST_TO_DEPLOY} -d"
+                    runCommand([command: AIGDeploy_CMD])
+                    runCommand([command: AIGDeploySNC_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename:"Deploy_AIG"])                   
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Generate Cache') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+            expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Generate_Cache') }
+            }
+            steps {
+                script {                    
+                    echo '[DEBUG INFO] Generate Cache'
+                    String FSCStart_CMD = "${DITA_MANAGE_SCRIPTS} -m FSC -a Start -d"  
+                    String GenerateMetaCache_CMD = "${DITA_DEPLOY_SCRIPTS} -m MetaDataCache -p ${PACKAGE_LIST_TO_DEPLOY} -d"                          
+                    runCommand([command: FSCStart_CMD])
+                    runCommand([command: GenerateMetaCache_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename: "Generate_Cache"])                    
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig,'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", dprofile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Sync TCData') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+                when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Sync_TCData') }
+                }
+            steps {
+                script {                   
+                    echo '[DEBUG INFO] Sync TCData'
+                    echo "[DEBUG INFO] Packages To Deploy : ${PACKAGE_LIST_TO_DEPLOY}"
+                    String SYNCTCData_CMD = "${DITA_DEPLOY_SCRIPTS} -m SyncData.tc -p ${PACKAGE_LIST_TO_DEPLOY} -d"                       
+                    runCommand([command: SYNCTCData_CMD])
+                    checkErrorStatus([parametersConfig: parametersConfig,stagename: "Sync_TCData"])                    
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 
+                       'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}",
+                        profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Start System') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+                when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Start_System') }
+                }
+            steps {
+                script {
+                    def targetJobParams = [
+                        [$class: 'StringParameterValue', name: 'TARGET_ENVIRONMENT', value: params.TARGET_ENVIRONMENT],
+                        [$class: 'StringParameterValue', name: 'STARTSTOP_OPTION', value: 'Start_System'],
+                        [$class: 'StringParameterValue', name: 'TIME_DELAY', value: params.TIME_DELAY],                        
+                        [$class: 'BooleanParameterValue', name: 'COMBINED_JOB', value: COMBINED_JOB],
+                        [$class: 'BooleanParameterValue', name: 'NOTIFY_TEAMS_CHANNEL', value: params.NOTIFY_TEAMS_CHANNEL],
+                        [$class: 'StringParameterValue', name: 'TARGET_TEAMS_CHANNELS', value: params.TARGET_TEAMS_CHANNELS],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_DOWN_MESSAGE', value: params.SYSTEM_DOWN_MESSAGE],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_UP_MESSAGE', value: params.SYSTEM_UP_MESSAGE]
+                    ]
+                    def targetJob = build(job: 'DITA_StartStop', parameters: targetJobParams)
+                    currentBuild.result = targetJob.result              
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage('Perform Acess Check') {
+            failFast true
+            agent {
+                label AGENT_SERVER_TO_DEPLOY
+            }
+            when {
+                expression { utils.checkDeployTarget(DEPLOYMENT_OPTION, 'Perform_Acess_Check') }
+            }
+            steps {
+                script {                    
+                    echo '[DEBUG INFO] Perform Acess Check'
+                    performAccessCheckPipeline([parametersConfig: parametersConfig, DITA_MANAGE_SCRIPTS: DITA_MANAGE_SCRIPTS, DITA_DEPLOY_SCRIPTS: DITA_DEPLOY_SCRIPTS, PACKAGE_LIST_TO_DEPLOY: PACKAGE_LIST_TO_DEPLOY, CMN_PACKAGE_LOCATION: CMN_PACKAGE_LOCATION,RI_PACKAGE_LOCATION:RI_PACKAGE_LOCATION  ])                  
+                }
+            }
+            post {
+                success {
+                    echo "[DEBUG INFO] [ ========[ DITA ${env.STAGE_NAME} successfully ]======== ]"
+                    // notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} SUCCESS- #${env.BUILD_NUMBER}", 
+                    // body: """
+                    //     Hello Team,</br>
+                    //     Please find the ${params.TARGET_ENVIRONMENT} Perform Access Check Result Reports</br>
+                    //     CMN Package Location: ${CMN_PACKAGE_LOCATION}</br>
+                    //     RI Package Location: ${RI_PACKAGE_LOCATION}</br>
+                    //     Regards</br>
+                    //     Team</br></br>
+                    //     ****** This is an automatically generated e-mail. Reply messages to this e-mail address will not be read ******</br>
+                    // """ ,profile: 'SystemAdmin'])                    
+                }
+                failure {
+                    echo "[DEBUG INFO] [  ========[ DITA ${env.STAGE_NAME} failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig,'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+    }
+}

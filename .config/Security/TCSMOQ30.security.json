@@ -1,0 +1,52 @@
+{
+    "fnd0_tcAdminPassword": "infodba",
+    "fnd0_corporateserver_osUserPassword": "nopassword",
+    "fnd0_oracleDBUserPassword": "",
+    "fnd0_fsc_machinePassword": "nopassword",
+    "fnd0_j2ee_tcwebtiertrustStorePassword": "nopassword",
+    "fnd0_serverManagerOracleDBUserPassword": "",
+    "fnd0_microservice_keyStorePassword": "",
+    "aws2_indexingEngineUserPassword": "",
+    "aws2_machinePassword": [
+        {
+            "machineName": "tcsmoq30tstk01.tcsmoq.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmoq30tstk02.tcsmoq.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmoq30awcif01.tcsmoq.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmoq30awc01.tcsmod.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmoq30mifawc01.tcsmoq.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmoq30sgsgpawc01.tcsmoq.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        },
+        {
+            "machineName": "tcsmodqvis01.tcsmod.siemens.com",
+            "username": "ad7tcsmoq30",
+            "value": "f#5B3tG*X7+p-d9RZ%k4?2ErH=g6/m"
+        }
+    ],
+    "fnd0_dispatcherclientProxyPassword": "dcproxy",
+    "fnd0_TcPassword4TcIF": "infodba",
+    "fnd0_TcIFUserPassword": "admin",
+    "MachineUserPassword": "nopassword",
+	"fnd0_embeddedLDAPKeyStorePassword": "nopassword"
+}

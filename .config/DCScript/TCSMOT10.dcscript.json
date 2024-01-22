@@ -1,0 +1,9 @@
+{
+   "deploy_tcsmot10tstk01.tcsmot.siemens.com": [
+      {
+         "data/Configurations.xml": {
+            "<dc:property id=\"1000720\" name=\"fnd0_blserverTcDataPath\" value=\"\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>": "<dc:property id=\"1000720\" name=\"fnd0_blserverTcDataPath\" value=\"\\\\demchdcvs023.ad007.siemens.net\\transfer_SMO\\tc_data_win\\tcsmot10\\tc_data\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>"
+         }
+      }
+   ]
+}

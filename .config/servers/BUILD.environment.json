@@ -1,0 +1,41 @@
+{
+    "ENVIRONMENT_NAME": "BUILD",
+	"BUILD_LNX_SERVER": [
+        {
+            "OS_TYPE": "LNX",
+            "USERNAME": "infodba",
+            "HOSTNAME": "demchdc47xx",
+            "IP_ADDRESS": "139.23.6.132",
+            "ALIASNAME": "",
+			"TC_ROOT":"/smo_share/dita_share_do_not_modify/build_dependencies/tc_build_refs/$TC_VERSION/tcroot/lnx64",
+			"TC_DATA":"/smo_share/dita_share_do_not_modify/build_dependencies/tc_build_refs/$TC_VERSION/tc_data",
+			"BMIDE_TEMPLATE_LOCATION": "/smo_share/dita_share_do_not_modify/build_dependencies/tc_build_bmide_templates",
+			"TARGET_BASE_LOCATION":"/smo_share/tcdeploy/Siemens_deployments/SMO",
+            "DELTA_CHECKOUT_PATH": "/data/lnxBuild/SMO_TC/$BRANCH"
+        }
+    ], 
+	"BUILD_WIN_SERVER": [
+        {
+            "OS_TYPE": "WIN",
+            "USERNAME": "AD7M58W4",
+            "HOSTNAME": "DEMCHDC8XNA.ad007.siemens.net",
+            "DOMAIN":"ad007.siemens.net",
+            "IP_ADDRESS": "139.23.6.136",
+            "ALIASNAME": "",            
+	        "7ZIP_PATH": "C:/Progra~1/7-Zip/7z.exe",
+			"JAVA_HOME": "C:/Progra~1/Java/zulu11.60.20-sa-jdk11.0.17",
+			"MOUNT_DRIVE_ENCRYPTED_PASSWORD_PATH": "D:/temp/Mount-OS-encrypted-password.txt",
+			"SOFTWARE_REPO_TARGET_PATH":"Y:/dc_extra_software_dir/software_repository_r1",
+			"VCVARS_FILE":"C:/Apps/VS2022/VC/Auxiliary/Build/vcvarsall.bat",
+			"TC_ROOT":"Y:/dita_share_do_not_modify/build_dependencies/tc_build_refs/$TC_VERSION/tcroot/wntx64",
+			"TC_DATA":"Y:/dita_share_do_not_modify/build_dependencies/tc_build_refs/$TC_VERSION/tc_data",
+			"BMIDE_TEMPLATE_LOCATION":"Y:/dita_share_do_not_modify/build_dependencies/tc_build_bmide_templates",
+			"BMIDE_LOCATION":"D:/Apps/Siemens/$TC_VERSION/bin",
+			"TARGET_BASE_LOCATION":"Y:/tcdeploy/Siemens_deployments/SMO",
+            "DELTA_CHECKOUT_PATH": "/data/lnxBuild/SMO_TC/$BRANCH"
+        }
+    ],
+	"GENERATE_MOUNT_ACCESS": {
+        "executeServers": "BUILD_WIN_SERVER"
+    }
+}

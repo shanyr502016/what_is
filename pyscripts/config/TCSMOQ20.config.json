@@ -1,0 +1,185 @@
+{
+  "ENVIRONMENT": "TCSMOQ20",
+  "MANAGE": [
+    "FSC",
+    "POOL_IF",
+    "WEB_IF",
+    "AWC_MICRO",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "SOLR",
+    "INDEXINGTASK",
+    "DC",
+    "PUBLISHER",
+    "REPO"
+  ],
+  "START": [
+    "FSC",
+    "POOL_IF",
+    "WEB_IF",
+    "AWC_MICRO",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "SOLR",
+    "INDEXINGTASK",
+    "DC",
+    "PUBLISHER",
+    "REPO"
+  ],
+  "STOP": [
+    "FSC",
+    "POOL_IF",
+    "WEB_IF",
+    "AWC_MICRO",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "SOLR",
+    "INDEXINGTASK",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DEADPROCESS"
+  ],
+  "FSC": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "FSC_LOCATION": "/data/tcsmoq20/tc14/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_TCSMOQ20V01TCSMOQSIEMENSCOM_infodba"
+      }
+    ]
+  },
+  "FSC_DCSCRIPT": {
+    "INSTANCES": "FSC",
+    "Description": "Description content"
+  },
+  "POOL": {
+    "INSTANCES": "POOL_IF"
+  },
+  "POOL_IF": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "POOL_LOCATION": "/data/tcsmoq20/tc14/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmoq20_if",
+        "SERVICE_NAME": "POOL_IF"
+      }
+    ]
+  },
+  "WEB_ALL": {
+    "INSTANCES": "WEB_IF"
+  },
+  "WEB_IF": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmoq20/apache-tomcat-9.0.68_if/bin",
+        "SERVICE_NAME": "Web_IF"
+      }
+    ]
+  },
+  "DC_ALL": {
+    "INSTANCES": "DC,PUBLISHER,REPO"
+  },
+  "AWC_VISASSIGN": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter VisServlet visassigner-A"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter VisServlet vispool-A"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_ALL": {
+    "INSTANCES": "AWC_MICRO,AWC_VISASSIGN,AWC_VISPOOL"
+  },
+  "AWC_MICRO": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "/",
+        "COMMAND": "Teamcenter Process Manager"
+      }
+    ]
+  },
+  "AWC_REMOTE": {
+    "INSTANCES": "AWC_MICRO"
+  },
+  "SOLR": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "SOLR_LOCATION": "/",
+        "COMMAND": "Active Workspace Indexing Service"
+      }
+    ]
+  },
+  "INDEXINGTASK": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "D:/Tc_Appl/tcsmoq20/tc14/TcFTSIndexer/bin",
+        "COMMAND": "PLM-runTcFTSIndexer",
+        "MAX_RETRIES": 3
+      }
+    ]
+  },
+  "DC": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/data/tcsmoq20/dc/webserver",
+        "COMMAND": "./dcserver.sh",
+        "SERVICE_NAME": "DC"
+      }
+    ]
+  },
+  "PUBLISHER": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/data/tcsmoq20/dc/webserver/messaging",
+        "COMMAND": "./publisher.sh",
+        "SERVICE_NAME": "PUBLISHER"
+      }
+    ]
+  },
+  "REPO": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "/data/tcsmoq20/dc/webserver/repotool",
+        "COMMAND": "./repotool.sh",
+        "SERVICE_NAME": "REPO"
+      }
+    ]
+  },
+  "CRON": {
+    "INSTANCES": [
+      {
+        "NODE": "CRON_ALL"
+      }
+    ]
+  },
+  "DEADPROCESS": {
+    "INSTANCES": [
+      {
+        "NODE": "CORPORATE_SERVER",
+        "FILTERS": "infodba,MUX",
+        "COMMAND": "",
+        "MAX_RETRIES": 3
+      }
+    ]
+  }
+}

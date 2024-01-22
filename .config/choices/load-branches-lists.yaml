@@ -1,0 +1,12 @@
+master:
+  - master
+dev:
+  - dev
+R1.1:
+  - release_1.1
+R1.1.1:
+  - release_1.1.1
+R1.2:
+  - release_1.2
+POC:
+  - poc_tc_14.3

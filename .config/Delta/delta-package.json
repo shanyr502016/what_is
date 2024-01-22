@@ -1,0 +1,140 @@
+{
+    "Common/01_bmide": "DCScript.exportENVQD,DCScript.generateDeployScripts,DCScript.deploy.corp,DCScript.deploy.corp.all",
+    "RI/01_bmide": "DCScript.exportENVQD,DCScript.generateDeployScripts,DCScript.deploy.corp,DCScript.deploy.corp.all",
+
+    "Common/02_tc_configuration/01_access_control_list": "ACL.Import",
+    "RI/02_tc_configuration/01_access_control_list": "ACL.Import",
+    
+    "Common/02_tc_configuration/02_application_authorization": "",
+    "RI/02_tc_configuration/02_application_authorization": "",
+
+    "Common/02_tc_configuration/03_nx_attribute_mapping": "NxAttributeMapping.Import",
+    "RI/02_tc_configuration/03_nx_attribute_mapping": "NxAttributeMapping.Import",
+
+    "Common/02_tc_configuration/04_awc": "AwcUiConfig",
+    "RI/02_tc_configuration/04_awc": "AwcUiConfig",
+
+    "Common/02_tc_configuration/05_classification": "Classification.Import",
+    "RI/02_tc_configuration/05_classification": "Classification.Import",
+
+    "Common/02_tc_configuration/06_closure_rules": "ClosureRules.Import",
+    "RI/02_tc_configuration/06_closure_rules": "ClosureRules.Import",
+
+    "Common/02_tc_configuration/07_crontab": "",
+    "RI/02_tc_configuration/07_crontab": "",
+
+    "Common/02_tc_configuration/08_datasets": "",
+    "RI/02_tc_configuration/08_datasets": "",
+
+    "Common/02_tc_configuration/09_lang": "CopyLangTextServer.all",
+    "RI/02_tc_configuration/09_lang": "CopyLangTextServer.all",
+
+    "Common/02_tc_configuration/10_lovs": "BatchLovs.Import",
+    "RI/02_tc_configuration/10_lovs": "BatchLovs.Import",
+
+    "Common/02_tc_configuration/11_officeclient": "",
+    "RI/02_tc_configuration/11_officeclient": "",
+
+    "Common/02_tc_configuration/12_organization": "Organization.makeuser",
+    "RI/02_tc_configuration/12_organization": "Organization.makeuser",
+
+    "Common/02_tc_configuration/13_property_formatter": "",
+    "RI/02_tc_configuration/13_property_formatter": "",
+
+    "Common/02_tc_configuration/14_plmxml_import": "",
+    "RI/02_tc_configuration/14_plmxml_import": "",
+
+    "Common/02_tc_configuration/15_preferences": "Preferences",
+    "RI/02_tc_configuration/15_preferences": "Preferences",
+
+    "Common/02_tc_configuration/16_queries": "Queries.customquery",
+    "RI/02_tc_configuration/16_queries": "Queries.customquery",
+
+    "Common/02_tc_configuration/17_reports": "Report.Import",
+    "RI/02_tc_configuration/17_reports": "Report.Import",
+
+    "Common/02_tc_configuration/18_revision_rules": "",
+    "RI/02_tc_configuration/18_revision_rules": "",
+
+    "Common/02_tc_configuration/19_stylesheets": "Stylesheets.Import",
+    "RI/02_tc_configuration/19_stylesheets": "Stylesheets.Import",
+
+    "Common/02_tc_configuration/20_tc_data": "CopyTcData.copyfiles",
+    "RI/02_tc_configuration/20_tc_data": "CopyTcData.copyfiles",
+
+    "Common/02_tc_configuration/21_template_filters": "",
+    "RI/02_tc_configuration/21_template_filters": "",
+
+    "Common/02_tc_configuration/22_transfer_modes": "Transfermodes.Import",
+    "RI/02_tc_configuration/22_transfer_modes": "Transfermodes.Import",
+
+    "Common/02_tc_configuration/23_workflow": "Workflows.Import",
+    "RI/02_tc_configuration/23_workflow": "Workflows.Import",
+
+    "Common/02_tc_configuration/24_nx_templates": "",
+    "RI/02_tc_configuration/24_nx_templates": "",
+
+    "Common/02_tc_configuration/25_nx_pax_files": "",
+    "RI/02_tc_configuration/25_nx_pax_files": "",
+
+    "Common/02_tc_configuration/26_tc_root": "TCSecurity.copy",
+    "RI/02_tc_configuration/26_tc_root": "TCSecurity.copy",  
+
+    "Common/02_tc_configuration/27_tcproject/create": "Project.Import",
+    "RI/02_tc_configuration/27_tcproject/create": "Project.Import",
+
+    "Common/02_tc_configuration/27_tcproject/update": "Project.Update",
+    "RI/02_tc_configuration/27_tcproject/update": "Project.Update",
+
+    "Common/03_tc_installation":"",
+    "RI/03_tc_installation":"",
+
+    "Common/04_tc_customization/01_server_customization/binaries/so_files":"CopySoDLL.SO.CORPORATE",
+    "RI/04_tc_customization/01_server_customization/binaries/so_files":"CopySoDLL.SO.CORPORATE",
+
+    "Common/04_tc_customization/01_server_customization/binaries/dlls":"CopySoDLL.DLL.DISPATCHER",
+    "RI/04_tc_customization/01_server_customization/binaries/dlls":"CopySoDLL.DLL.DISPATCHER",
+
+    "Common/04_tc_customization/02_awc":"AWC.deploy",
+    "RI/04_tc_customization/02_awc":"AWC.deploy",
+
+    "Common/04_tc_customization/03_dispatcher":"",
+    "RI/04_tc_customization/03_dispatcher":"",
+
+    "Common/04_tc_customization/04_myscript":"MyScript.Deploy",
+    "RI/04_tc_customization/04_myscript":"MyScript.Deploy",
+
+    "Common/05_dita":"",
+    "RI/05_dita":"",
+
+    "Common/06_dispatcher/DispatcherClient":"Dispatcher.Client",
+    "RI/06_dispatcher/DispatcherClient":"Dispatcher.Client",
+
+    "Common/06_dispatcher/Module":"Dispatcher.Module",
+    "RI/06_dispatcher/Module":"Dispatcher.Module",
+
+    "Common/07_scf":"",
+    "RI/07_scf":"",
+
+    "Common/08_nx":"NXShare",
+    "RI/08_nx":"NXShare",
+
+    "Common/09_t4s":"AIG.deploy",
+    "RI/09_t4s":"AIG.deploy",
+
+    "Common/10_tcvis":"TCVis.deploy",
+    "RI/10_tcvis":"TCVis.deploy",
+
+    "Common/11_interfaces":"",
+    "RI/11_interfaces":"",
+
+    "Common/12_smoke_test":"",
+    "RI/12_smoke_test":"",
+
+    "Common/13_imm":"",
+    "RI/13_imm":"",
+
+    "Common/14_subscmpl":"",
+    "RI/14_subscmpl":"" 
+
+}

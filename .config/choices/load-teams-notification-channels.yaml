@@ -1,0 +1,6 @@
+IRM:
+  - https://siemens.webhook.office.com/webhookb2/680cd09e-c273-4c51-9e54-1dd5ced7bed3@38ae3bcd-9579-4fd4-adda-b42e1495d55a/IncomingWebhook/a4e530a073bc4d219a116ad70c7502d3/3a2ac6b7-6317-4c4f-8f19-15cf90076b71
+SMO:
+  - https://siemens.webhook.office.com/webhookb2/ed10e316-93c4-4d9a-b5e0-49ce93819c77@38ae3bcd-9579-4fd4-adda-b42e1495d55a/IncomingWebhook/12c836fa040e41768c8779165cd87af5/4dddfea4-ce2c-4fc0-9926-507236403ccf
+SystemAdmin:
+  - https://siemens.webhook.office.com/webhookb2/d1ff451e-725c-4ddf-8b34-404f418a9b76@38ae3bcd-9579-4fd4-adda-b42e1495d55a/IncomingWebhook/e309d51ff89c40c290f312768d4eeea3/3a2ac6b7-6317-4c4f-8f19-15cf90076b71

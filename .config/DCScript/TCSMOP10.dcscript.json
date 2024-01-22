@@ -1,0 +1,16 @@
+{
+    "deploy_demchdc4dxx.dc4ca.siemens.de": [
+       {
+          "data/Configurations.xml": {
+            "<dc:property id=\"1005849\" name=\"fnd0_blserverTcDataPath\" value=\"\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>": "<dc:property id=\"1005849\" name=\"fnd0_blserverTcDataPath\" value=\"/smo_share_prod/tc_data_sso_lnx64\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>"
+          }
+       }
+    ],
+    "deploy_TCSMOP10APP02.TCSMOP.SIEMENS.COM": [
+        {
+            "data/Configurations.xml": {
+              "<dc:property id=\"1003325\" name=\"fnd0_blserverTcDataPath\" value=\"/data/tcsmop10/tc_data\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>": "<dc:property id=\"1003325\" name=\"fnd0_blserverTcDataPath\" value=\"/smo_share_prod/tc_data_lnx64\" type=\"Directory\" alias=\"fnd0_tcDataPath\"/>"
+            }
+         }
+    ]
+ }

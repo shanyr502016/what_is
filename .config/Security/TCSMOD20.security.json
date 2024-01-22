@@ -1,0 +1,20 @@
+{
+    "fnd0_tcAdminPassword": "REPLACEDME",
+    "fnd0_corporateserver_osUserPassword": "REPLACEDME",
+    "fnd0_oracleDBUserPassword": "REPLACEDME",
+    "fnd0_fms_keyStorePassword": "REPLACEDME",
+    "fnd0_fsc_machinePassword": "REPLACEDME",
+    "fnd0_j2ee_tcwebtiertrustStorePassword": "REPLACEDME",
+    "fnd0_serverManagerOracleDBUserPassword": "REPLACEDME",
+    "fnd0_microservice_keyStorePassword": "REPLACEDME",
+    "aws2_indexingEngineUserPassword": "REPLACEDME",
+    "aws2_machinePassword": "REPLACEDME",    
+    "fnd0_embeddedLDAPKeyStorePassword":"REPLACEDME",
+    "fnd0_dispatcherclientProxyPassword":"REPLACEDME",
+    "fnd0_TcPassword4TcIF":"REPLACEDME",
+    "fnd0_TcIFUserPassword":"REPLACEDME",
+    "MachineUserPassword": "REPLACEDME"
+
+
+
+}

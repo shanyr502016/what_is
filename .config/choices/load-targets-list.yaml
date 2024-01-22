@@ -1,0 +1,39 @@
+Deploy_PreBMIDE:
+  - Organization.makeuser
+  - Project.Update
+  - Preferences
+  - CopyLangTextServer.all
+Deploy_PostBMIDE:
+  - Queries.customquery
+  - Stylesheets.Import
+  - BatchLovs.Import
+  - Workflows.Import
+  - ClosureRules.Import
+  - AwcUiConfig
+  - Clsutility.Import
+  - TCSecurity.copy
+  - ACL.Import
+  - NxAttributeMapping.Import
+  - Transfermodes.Import
+  - Report.Import
+  - CopyTcData.copyfiles
+  - NXShare
+  - CopySoDLL
+  - Dispatcher.Client
+  - Dispatcher.Module
+  - MyScript.Deploy
+  - AWC.copy
+  - AWC.build.if
+  - AWC.build.sso
+  - AWC.build.ldapsso
+DC_ExecuteScripts_CorpAll:
+  - DCScript.deploy.corp.app02if
+  - DCScript.deploy.corp.app01sso
+  - DCScript.deploy.corp.app02sso
+DC_ExecuteScripts_AWC:
+  - DCScript.deploy.awc.mch1
+  - DCScript.deploy.awc.mch2
+  - DCScript.deploy.awc.mch1.alias
+  - DCScript.deploy.awc.mch2.alias
+  - DCScript.deploy.awc.if
+  - DCScript.deploy.awc.ssr

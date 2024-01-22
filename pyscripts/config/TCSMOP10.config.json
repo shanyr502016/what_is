@@ -1,0 +1,1006 @@
+{
+  "ENVIRONMENT": "TCSMOP10",
+  "MANAGE": [
+	"FSC_IFVOL01",
+	"FSC_IFVOL02",
+    "FSC_IFAPP01",
+    "FSC_IFAPP02",   
+    "FSC_IFSG",
+    "FSC_IFUS",
+    "POOL_IFAPP01",
+    "POOL_IFAPP02",
+    "POOL_SSOAPP01",
+    "POOL_SSOAPP02",
+    "SOLR",
+    "WEB_IFW01",
+    "WEB_IDSLOSW01",
+    "WEB_SSOW01",
+    "WEB_IFW02",
+    "WEB_IDSLOSW02",
+    "WEB_SSOW02",
+    "INDEXINGTASK",
+    "AWC_MICRO_AW01",
+    "AWC_MICRO_AW02",
+    "AWC_MICRO_US",
+    "AWC_MICRO_SGP",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+	  "TCCS_SSR",
+    "TCCS_MCH1_SSO",
+    "TCCS_MCH2_SSO",
+    "TCCS_MLF",
+    "TCCS_SGP",
+    "MGMT_SSOAPP01",
+    "MGMT_SSOAPP02",
+    "CPM_IFAPP01",
+    "CPM_IFAPP02",
+	"ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "AIG_BGS",
+    "AIG_GSAPP01",
+    "AIG_GSAPP02",
+    "TCIF_IFAPP01",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON_APP1IF",
+    "CRON_BATCH"
+  ],
+  "START": [
+	"FSC_IFVOL01",
+	"FSC_IFVOL02",
+    "FSC_IFAPP01",
+    "FSC_IFAPP02",   
+    "FSC_IFSG",
+    "FSC_IFUS",
+    "POOL_IFAPP01",
+    "POOL_IFAPP02",
+    "POOL_SSOAPP01",
+    "POOL_SSOAPP02",
+    "SOLR",
+    "WEB_IFW01",
+    "WEB_IDSLOSW01",
+    "WEB_SSOW01",
+    "WEB_IFW02",
+    "WEB_IDSLOSW02",
+    "WEB_SSOW02",
+    "INDEXINGTASK",
+    "AWC_MICRO_AW01",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "AWC_MICRO_AW02",    
+    "AWC_MICRO_US",  
+    "AWC_MICRO_SGP",   
+    "TCCS_MCH1_SSO",
+    "TCCS_MCH2_SSO",
+    "TCCS_MLF",
+    "TCCS_SGP",
+    "MGMT_SSOAPP01",
+    "MGMT_SSOAPP02",
+    "CPM_IFAPP01",
+    "CPM_IFAPP02",
+	"ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "AIG_BGS",
+    "AIG_GSAPP01",
+    "AIG_GSAPP02",
+    "TCIF_IFAPP01",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON_APP1IF",
+    "CRON_BATCH"
+  ],
+  "STOP": [
+    "FSC_IFAPP01",
+    "FSC_IFAPP02",	
+    "FSC_IFSG",
+    "FSC_IFUS",
+	"FSC_IFVOL01",
+	"FSC_IFVOL02",
+    "POOL_IFAPP01",
+    "POOL_IFAPP02",
+    "POOL_SSOAPP01",
+    "POOL_SSOAPP02",
+    "SOLR",
+    "WEB_IFW01",
+    "WEB_IDSLOSW01",
+    "WEB_SSOW01",
+    "WEB_IFW02",
+    "WEB_IDSLOSW02",
+    "WEB_SSOW02",
+    "INDEXINGTASK",
+    "AWC_MICRO_AW01",
+    "AWC_VISASSIGN",
+    "AWC_VISPOOL",
+    "AWC_MICRO_AW02",    
+    "AWC_MICRO_US",    
+    "AWC_MICRO_SGP",
+    "AWC_VISASSIGN_SGP",
+    "AWC_VISPOOL_SGP",
+    "TCCS_MCH1_SSO",
+    "TCCS_MCH2_SSO",
+    "TCCS_MLF",
+    "TCCS_SGP",
+    "MGMT_SSOAPP01",
+    "MGMT_SSOAPP02",
+    "CPM_IFAPP01",
+    "CPM_IFAPP02",
+	"ACTIONMGR",
+    "SUBSCRIPTIONMGR",
+    "AIG_BGS",
+    "AIG_GSAPP01",
+    "AIG_GSAPP02",
+    "TCIF_IFAPP01",
+    "DC",
+    "PUBLISHER",
+    "REPO",
+    "DISPATCHER_SCHEDULER",
+    "DISPATCHER_MODULE",
+    "DISPATCHER_CLIENT",
+    "CRON_APP1IF",
+	"CRON_BATCH",
+    "DEADPROCESS"
+	
+  ],
+  "FSC": {
+    "INSTANCES": "FSC_IFVOL01,FSC_IFVOL02,FSC_IFSG,FSC_IFUS,FSC_IFAPP01,FSC_IFAPP02",
+    "Description": "Description content"
+  },
+  "FSC_DCSCRIPT": {
+    "INSTANCES": "FSC_IFAPP01,FSC_IFVOL01,FSC_IFVOL02",
+    "Description": "Description content"
+  },
+  "FSC_IFAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmop10app01tcsmopsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_IF",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_TCSMOP10APP02TCSMOPSIEMENSCOM_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_SSOAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_SSO",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_sso/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_demchdc4dwxdc4casiemensde_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_SSOAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_SSO",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_sso/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_demchdc4dxxdc4casiemensde_sso_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFVOL01": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_MCH1",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmop10v01tcsmopsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFVOL02": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_MCH2",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmop10v02tcsmopsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFSG": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_SGP",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmop10sgsgpvol01tcsmopsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "FSC_IFUS": {
+    "INSTANCES": [
+      {
+        "NODE": "VOLUME_MLF",
+        "FSC_LOCATION": "/data/tcsmop10/tc14_if/fsc",
+        "RC_FILENAME": "rc.ugs.FSC_tcsmop10mifv01tcsmopsiemenscom_infodba"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "POOL": {
+    "INSTANCES": "POOL_IFAPP01,POOL_IFAPP02,POOL_SSOAPP01,POOL_SSOAPP02",
+    "Description": "Description content"
+  },
+  "POOL_IFAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "POOL_LOCATION": "/data/tcsmop10/tc14_if/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmop10_app01_if",
+        "SERVICE_NAME": "POOL_IFAPP01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "POOL_IFAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_IF",
+        "POOL_LOCATION": "/data/tcsmop10/tc14_if/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmop10_app02_if",
+        "SERVICE_NAME": "POOL_IFAPP02"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "POOL_SSOAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_SSO",
+        "POOL_LOCATION": "/data/tcsmop10/tc14_sso/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmop10_app01_sso",
+        "SERVICE_NAME": "POOL_IFAPP01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "POOL_SSOAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_SSO",
+        "POOL_LOCATION": "/data/tcsmop10/tc14_sso/pool_manager/confs/config1",
+        "RC_FILENAME": "rc.tc.mgr_config1_tcsmop10_app02_sso",
+        "SERVICE_NAME": "POOL_IFAPP01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "SOLR": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SOLR",
+        "SOLR_LOCATION": "/data/tcsmop10/tc14_if/solr-8.11.1/bin",
+        "COMMAND": "./solr start"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_ALL": {
+    "INSTANCES": "WEB_IFW01,WEB_IDSLOSW01,WEB_SSOW01,WEB_IFW02,WEB_IDSLOSW02,WEB_SSOW02",
+    "Description": "Description content"
+  },
+  "WEB_W01": {
+    "INSTANCES": "WEB_IFW01,WEB_IDSLOSW01,WEB_SSOW01",
+    "Description": "Description content"
+  },
+  "WEB_IFW01": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_if/bin",
+        "SERVICE_NAME": "Web_IFW01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_IDSLOSW01": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_idslos/bin",
+        "SERVICE_NAME": "Web_DSLOSW01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_SSOW01": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER1",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_sso/bin",
+        "SERVICE_NAME": "Web_SSOW01"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_W02": {
+    "INSTANCES": "WEB_IFW02,WEB_IDSLOSW02,WEB_SSOW02",
+    "Description": "Description content"
+  },
+  "WEB_IFW02": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER2",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_if/bin",
+        "SERVICE_NAME": "Web_IFW02"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_IDSLOSW02": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER2",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_idslos/bin",
+        "SERVICE_NAME": "Web_DSLOSW02"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "WEB_SSOW02": {
+    "INSTANCES": [
+      {
+        "NODE": "WEB_SERVER2",
+        "TOMCAT_LOCATION": "/data/tcsmop10/apache-tomcat-9.0.68_sso/bin",
+        "SERVICE_NAME": "Web_SSOW02"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "ACTIONMGR": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "LOCATION": "/data/tcsmop10/tc14_if/bin",
+        "SERVICE_NAME": "ACTIONMGR",
+        "COMMAND": "nohup ./actionmgrd"
+      }
+    ]
+  },
+  "SUBSCRIPTIONMGR": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "LOCATION": "/data/tcsmop10/tc14_if/bin",
+        "SERVICE_NAME": "SUBSCRIPTIONMGR",
+        "COMMAND": "nohup ./subscriptionmgrd"
+      }
+    ]
+  },
+  "INDEXINGTASK": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SOLR",
+        "LOCATION": "/data/tcsmop10/tc14_if/TcFTSIndexer/bin",
+        "COMMAND": "nohup ./runTcFTSIndexer.sh -task=objdata:sync -interval=30 &",
+        "MAX_RETRIES": 2
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_ALL": {
+    "INSTANCES": "AWC_MICRO_AW01,AWC_VISASSIGN,AWC_VISPOOL,AWC_MICRO_AW02",
+    "Description": "Description content"
+  },
+  "AWC_MICRO_ALL": {
+    "INSTANCES": "AWC_MICRO_AW01,AWC_MICRO_AW02,AWC_MICRO_US,AWC_MICRO_SGP",
+    "Description": "Description content"
+  },
+  "AWC_AW01": {
+    "INSTANCES": "AWC_MICRO_AW01,AWC_VISASSIGN,AWC_VISPOOL",
+    "Description": "Description content"
+  },
+  "AWC_VISASSIGN": {
+    "INSTANCES": [
+        {
+            "NODE": "AWC_SSR",
+            "LOCATION": "/",
+            "COMMAND": "Teamcenter VisServlet visassigner-A",
+            "TEMP_PATHS": [
+              "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+              "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+              "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+              "C:/Users/$USERNAME/Siemens/logs",
+              "C:/Users/$USERNAME/Teamcenter"
+            ],
+            "TEMP_PATHS_WITH_PATTERN": ["*.log", "*.log"],
+            "CLEAR_TEMP_KEYWORD": "inconsistencies",
+            "MAX_RETRIES": 3
+        }
+    ],
+    "Description":"Description content"
+  },
+  "AWC_VISPOOL": {
+      "INSTANCES": [
+          {
+              "NODE": "AWC_SSR",
+              "LOCATION": "/",
+              "COMMAND": "Teamcenter VisServlet vispool-A",
+              "TEMP_PATHS": [
+                "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+                "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+                "C:/Users/$USERNAME/Siemens/logs",
+                "C:/Users/$USERNAME/Teamcenter",
+                "C:/Users/$USERNAME/AppData/Local/Temp/*.*"
+              ],
+              "TEMP_PATHS_WITH_PATTERN": ["o*.log", "*.log"],
+              "CLEAR_TEMP_KEYWORD": "inconsistencies",
+              "MAX_RETRIES": 3
+          }
+      ],
+      "Description":"Description content"
+  },
+  "AWC_MICRO_AW01": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      },
+      {
+        "NODE": "AWC_MCH1_LDAPSSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager TA",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISASSIGN_AW01": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet visassigner-A"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL_AW01": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet vispool-A"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_AW02": {
+    "INSTANCES": "AWC_MICRO,AWC_VISASSIGN,AWC_VISPOOL_AW02",
+    "Description": "Description content"
+  },
+  "AWC_MICRO_AW02": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH2_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      },
+      {
+        "NODE": "AWC_MCH2_LDAPSSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager TA",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISASSIGN_AW02": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH2_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet visassigner-B"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL_AW02": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH2_SSO",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet vispool-B"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_US": {
+    "INSTANCES": "AWC_MICRO_US,AWC_VISASSIGN,AWC_VISPOOL",
+    "Description": "Description content"
+  },
+  "AWC_SGP": {
+    "INSTANCES": "AWC_MICRO_SGP,AWC_VISASSIGN,AWC_VISPOOL",
+    "Description": "Description content"
+  },
+  "AWC_MICRO_US": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MLF",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_MICRO_SGP": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SGP",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter Process Manager",
+        "TEMP_PATHS": [
+          "C:/Users/$USERNAME/AppData/Local/Temp/jetty*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/Vis*",
+          "C:/Users/$USERNAME/AppData/Local/Temp/*.*",
+          "C:/Users/$USERNAME/filerepo_id",
+          "C:/Users/$USERNAME/Siemens/logs",
+          "C:/Users/$USERNAME/Teamcenter"
+        ],
+        "TEMP_PATHS_WITH_PATTERN": ["file-repo*.log", "file-repo1*.log"],
+        "CLEAR_TEMP_KEYWORD": "inconsistencies",
+        "MAX_RETRIES": 3
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISASSIGN_US": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MLF",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet visassigner-C"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISASSIGN_SGP": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SGP",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet visassigner-C"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL_US": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MLF",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet vispool-C"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_VISPOOL_SGP": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SGP",
+        "LOCATION": "",
+        "COMMAND": "Teamcenter VisServlet vispool-C"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AWC_MICRO": {
+    "INSTANCES": "AWC_MICRO_AW01",
+    "Description": "Description content"
+  },
+  "AWC_REMOTE": {
+    "INSTANCES": "AWC_MICRO_AW02,AWC_MICRO_US,AWC_MICRO_SGP",
+    "Description": "Description content"
+  },
+  "AIG_BGS": {
+    "INSTANCES": [
+      {
+        "NODE": "AIG_BGS",
+        "LOCATION": "/data/tcsmop10/aig/bgs_root/bgs/bin64",
+        "SERVICE_NAME": "tpbgs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS_SSR": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SSR",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/tc_ssr/tccs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS_MCH1_SSO": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH1_SSO",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/tc14_if/tccs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS_MCH2_SSO": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MCH2_SSO",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/tc14_if/tccs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS_SGP": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_SGP",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/tc14_if/tccs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCCS_MLF": {
+    "INSTANCES": [
+      {
+        "NODE": "AWC_MLF",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/tc14_if/tccs"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AIG_GS": {
+    "INSTANCES": "AIG_GSAPP01,AIG_GSAPP02",
+    "Description": "Description content"
+  },
+  "AIG_GSAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "AIG_GS_MCH1",
+        "LOCATION": "/data/tcsmop10/aig/gs_root/gs/bin64",
+        "SERVICE_NAME": "tpapps"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "AIG_GSAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "AIG_GS_MCH2",
+        "LOCATION": "/data/tcsmop10/aig/gs_root/gs/bin64",
+        "SERVICE_NAME": "tpapps"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CPM": {
+    "INSTANCES": "CPM_IFAPP01,CPM_IFAPP02",
+    "Description": "Description content"
+  },
+  "CPM_IFAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "CPM_LOCATION": "/data/tcsmop10/cpm/bin",
+        "SERVICE_NAME": "CPM"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CPM_IFAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_IF",
+        "CPM_LOCATION": "/data/tcsmop10/cpm/bin",
+        "SERVICE_NAME": "CPM"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCIF": {
+    "INSTANCES": "TCIF_IFAPP01",
+    "Description": "Description content"
+  },
+  "TCIF_IFAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF",
+        "TCIF_LOCATION": "/data/tcsmop10/tc14_if/tcif/container/bin",
+        "SERVICE_NAME": "TCIF",
+        "COMMAND": "nohup ./lnxservice &",
+        "STOP_COMMAND": "echo"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "TCIF_IFAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_IF",
+        "TCIF_LOCATION": "/data/tcsmop10/tc14_if/tcif/container/bin",
+        "SERVICE_NAME": "TCIF",
+        "COMMAND": "nohup ./lnxservice &",
+        "STOP_COMMAND": "echo"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DISPATCHER_ALL": {
+    "INSTANCES": "DISPATCHER_SCHEDULER,DISPATCHER_MODULE,DISPATCHER_CLIENT",
+    "Description": "Description content"
+  },
+  "DISPATCHER_SCHEDULER": {
+    "INSTANCES": [
+      {
+        "NODE": "DISPATCHER_SCH_CL",
+        "LOCATION": "/data/tcsmop10/Dispatcher/Scheduler/bin",
+        "COMMAND": "nohup ./runscheduler.sh &",
+        "COMMAND_REGEX": "transscheduler",
+        "SERVICE_NAME": "Scheduler"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DISPATCHER_MODULE": {
+    "INSTANCES": [
+      {
+        "NODE": "DISPATCHER_MODULE",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/dispatcher/Module/bin",
+        "COMMAND_old": "runmodule.bat",
+		    "SERVICE_TYPE": "WINSERVICE",
+		    "COMMAND": "Teamcenter Dispatcher Module",
+        "SERVICE_NAME": "Dispatcher_Module"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DISPATCHER_CLIENT": {
+    "INSTANCES": [
+      {
+        "NODE": "DISPATCHER_MODULE",
+        "LOCATION": "D:/Tc_Appl/tcsmop10/dispatcher/DispatcherClient/bin",
+        "COMMAND_old": "runDispatcherClient.bat",
+		    "SERVICE_TYPE": "WINSERVICE",
+		    "COMMAND": "Teamcenter Dispatcher Client",
+        "SERVICE_NAME": "Dispatcher_Client"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "MGMT": {
+    "INSTANCES": "MGMT_SSOAPP01,MGMT_SSOAPP02",
+    "Description": "Description content"
+  },
+  "MGMT_SSOAPP01": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_SSO",
+        "LOCATION": "/data/tcsmop10/tc14_sso/mgmt_console/container/bin",
+        "SERVICE_NAME": "MGMT"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "MGMT_SSOAPP02": {
+    "INSTANCES": [
+      {
+        "NODE": "APP2_SSO",
+        "LOCATION": "/data/tcsmop10/tc14_sso/mgmt_console/container/bin",
+        "SERVICE_NAME": "MGMT"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DC_ALL": {
+    "INSTANCES": "DC,PUBLISHER,REPO",
+    "Description": "Description content"
+  },
+  "DC": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "",
+        "COMMAND": "DC_Service",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmop10/dc/webserver/temp"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "PUBLISHER": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "",
+        "COMMAND": "DC_RepoService_Publisher",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmop10/dc/webserver/messaging/temp"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "REPO": {
+    "INSTANCES": [
+      {
+        "NODE": "DEPLOYMENT_CENTER",
+        "LOCATION": "",
+        "COMMAND": "DC_RepoService",
+        "SERVICE_LOCATION": "D:/Tc_Appl/tcsmop10/dc/webserver/repotool"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CRON": {
+    "INSTANCES": "CRON_APP1IF,CRON_BATCH",
+    "Description": "Description content"
+  },
+  "CRON_APP1IF": {
+    "INSTANCES": [
+      {
+        "NODE": "APP1_IF"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "CRON_BATCH": {
+    "INSTANCES": [
+      {
+        "NODE": "BATCH"
+      }
+    ],
+    "Description": "Description content"
+  },
+  "DEADPROCESS": {
+    "INSTANCES": [
+		    {
+            "NODE": "APP1_IF",
+            "FILTERS": "tcserver",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+		    {
+            "NODE": "APP2_IF",
+            "FILTERS": "tcserver",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "APP1_SSO",
+            "FILTERS": "infodba,MUX",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "APP2_SSO",
+            "FILTERS": "infodba,MUX",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+		    {
+          "NODE": "VOLUME_SGP",
+          "FILTERS": "infodba",
+          "COMMAND": "",
+          "MAX_RETRIES": 3
+        },
+        {
+          "NODE": "VOLUME_MLF",
+          "FILTERS": "infodba",
+          "COMMAND": "",
+          "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "AIG_BGS",
+            "FILTERS": "infodba",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "DCSCRIPT_VOLUME_ALL",
+            "FILTERS": "infodba",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "DCSCRIPT_REMOTEDEPLOY_LNX_ALL",
+            "FILTERS": "infodba",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "AWC_SOLR",
+            "FILTERS": "infodba",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "DISPATCHER_SCH_CL",
+            "FILTERS": "infodba",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },
+        {
+            "NODE": "DISPATCHER_WIN_ALL",
+            "FILTERS": "Tc_Appl\\tcsmop10,Notepad++,explorer.exe",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        },			
+        {
+            "NODE": "BACKUP_AWC_ALL",
+            "FILTERS": "Tc_Appl\\tcsmop10,Notepad++,explorer.exe",
+            "COMMAND": "",
+            "MAX_RETRIES": 3
+        }
+    ],
+    "Description": "Description content"
+}
+}

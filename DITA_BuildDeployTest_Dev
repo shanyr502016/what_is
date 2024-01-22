@@ -1,0 +1,341 @@
+/**
+    __description__     = 'This Job is designed to provide a user friendly Interface to easy access of Python Framework for PLM based Teamcenter Modules deployments.'
+    __author__          = 'Raghulraj Palanisamy & Asawari Deshpande'
+    __copyright__       = "© Copyright Siemens. All rights reserved"
+    __version__         = 0.2
+
+ */
+
+@Library('DITACI')_
+import com.lib.GlobalVars
+import com.lib.Utilities
+
+String AGENT_SERVER_TO_DEPLOY = null
+String AGENT_JENKINS_TO_SERVER_LNX = 'demchdc47xx'
+String DITA_SCRIPTS_PATH = ""
+String DITA_MANAGE_SCRIPTS = ""
+String DITA_DEPLOY_SCRIPTS = ""
+String JOB_TYPE = ""
+def resourcesConfig = null
+def parametersConfig = null
+def branchesConfig = null
+def targetNode = null
+def utils = null
+String currentBuidWorkspace = null
+String PACKAGE_LIST_TO_DEPLOY = null
+def SUB_TARGETS_DEPLOYMENT_OPTIONS = null
+String INCOMING_WEBHOOK_URL = ""
+
+def build_status = false
+def deploy_status = false
+def test_status = false
+
+def SOFTWARE_VERSION = ''
+def CMN_PACKAGE_NAME = ''
+def BU_PACKAGE_NAME = ''
+
+/* Pipeline JOB Setup required configurations */
+pipeline
+{
+    agent {
+        label AGENT_JENKINS_TO_SERVER_LNX
+    }
+    options {
+        skipDefaultCheckout()
+        timestamps()
+        timeout(time: 300, unit: 'MINUTES')
+        ansiColor('xterm')
+        disableConcurrentBuilds()
+    }
+
+    triggers {
+        parameterizedCron(
+            '''
+            # Scheduled on TCSMOD50
+            # H 17 * * 1-5 %GIT_BRANCH=R1.1;TARGET_ENVIRONMENT=TCSMOD50;PACKAGE_NAME=Daily;TEAMCENTER_MODULES=All;DEPLOYMENT_OPTION=All;DEBUG_EXECUTION_MODE=true;BUILD_PACKAGE=true;START_DEPLOY_FROM_BEGINNING=false;NOTIFY_TEAMS_CHANNEL=true
+            # H 17 * * 1-5 %GIT_BRANCH=R1.2;TARGET_ENVIRONMENT=TCSMOD30;PACKAGE_NAME=Daily;TEAMCENTER_MODULES=All;DEPLOYMENT_OPTION=All;DEBUG_EXECUTION_MODE=true;BUILD_PACKAGE=true;START_DEPLOY_FROM_BEGINNING=false;NOTIFY_TEAMS_CHANNEL=true
+            '''
+        )
+    }
+
+    stages {
+		
+        stage('Checkout Deployment Framework from SMO_CI-CD') {
+            steps {
+
+                script {
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy Checking-out  ]======== ]"
+                    cleanWs()
+                    git branch: 'ci-cd-jenkins-delta',
+                    credentialsId: 'infodbaat47xx',
+                    url: 'git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/smo_ci-cd.git',
+                    changelog: false,
+                    poll: false
+                    currentBuidWorkspace = WORKSPACE
+                }
+
+            }
+
+            post {
+                    success{
+                        echo "[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project executed successfully ]======== ]"
+                    }
+                    failure{
+                        echo "[DEBUG INFO] [ ========[ DITA Deploy Checking-out of SMO_CI-CD project execution failed ]======== ]"                        
+                    }
+            }
+        }
+
+        stage ('Setup Choice Parameters'){
+            steps {
+                script {
+                        dir(currentBuidWorkspace) {
+                            // Enhance the Parameters
+                            parametersConfig = parametersPipeline([
+                                currentBuidWorkspace: currentBuidWorkspace,
+                                parametersEnable: ["GIT_BRANCH","TARGET_ENVIRONMENT", "PACKAGE_NAME", "TC_VERSION", "BUILD_HEADER" ,"TEAMCENTER_MODULES", "DEPLOY_HEADER","DEPLOYMENT_OPTION",
+                                                    "SUB_TARGETS_DEPLOYMENT","DEPLOY_TYPE","BUILD_PACKAGE","START_DEPLOY_FROM_BEGINNING", "DEBUG_EXECUTION_MODE", "TIME_DELAY", "NOTIFICATION_HEADER",
+                                                    "NOTIFY_TEAMS_CHANNEL","TARGET_TEAMS_CHANNELS", "SYSTEM_DOWN_MESSAGE", "SYSTEM_UP_MESSAGE"]
+                            ])
+                            utils = new Utilities()  
+                            JOB_TYPE = utils.findJobType(currentBuild)       
+                            echo "[DEBUG INFO] Detected jobType: ${JOB_TYPE}"                       
+                        }                    
+                    }
+                }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy Updating the parameters successfully ]======== ]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ DITA Deploy Updating the parameters failed ]======== ]"
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                }
+            }
+        }
+
+        stage ('Call StartStop Job') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            steps {
+
+                script {
+                    def targetJobParams = [
+                        [$class: 'StringParameterValue', name: 'TARGET_ENVIRONMENT', value: params.TARGET_ENVIRONMENT],
+                        [$class: 'StringParameterValue', name: 'STARTSTOP_OPTION', value: 'Stop_System'],
+                        [$class: 'StringParameterValue', name: 'TIME_DELAY', value: params.TIME_DELAY],
+                        [$class: 'BooleanParameterValue', name: 'COMBINED_JOB', value: true],
+                        [$class: 'BooleanParameterValue', name: 'NOTIFY_TEAMS_CHANNEL', value: params.NOTIFY_TEAMS_CHANNEL],
+                        [$class: 'StringParameterValue', name: 'TARGET_TEAMS_CHANNELS', value: params.TARGET_TEAMS_CHANNELS],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_DOWN_MESSAGE', value: params.SYSTEM_DOWN_MESSAGE],
+                        [$class: 'StringParameterValue', name: 'SYSTEM_UP_MESSAGE', value: params.SYSTEM_UP_MESSAGE]
+                    ]
+                    def targetJob = build(job: 'DITA_StartStop', parameters: targetJobParams)
+
+                    currentBuild.result = targetJob.result
+                }
+
+            }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ DITA Call StartStop Job Done successfully ]========]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ DITA Call StartStop Job  failed ]======== ]"  
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])                         
+                }
+            }
+            
+        }
+
+        stage ('Call Build Job') {
+            failFast true
+            agent {
+                label AGENT_JENKINS_TO_SERVER_LNX
+            }
+            steps {
+                script {
+                    echo '[DEBUG INFO] Call Build Job'
+
+                    SOFTWARE_VERSION = new Date().format("yyyyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+                    PACKAGE_NAME = 'Daily'
+
+                    
+                    echo "GIT_BRANCH : ${params.GIT_BRANCH}"
+                    echo "PACKAGE_NAME : ${params.PACKAGE_NAME}"
+                    echo "TEAMCENTER_MODULES : ${params.TEAMCENTER_MODULES}"
+                    echo "TC_VERSION : ${params.TC_VERSION}" 
+                    echo "DEBUG_EXECUTION_MODE : ${params.DEBUG_EXECUTION_MODE}" 
+                    echo "BUILD_PACKAGE : ${params.BUILD_PACKAGE}" 
+                    echo 'SOFTWARE_VERSION :: ' + SOFTWARE_VERSION                             
+
+
+                    def jobParameters = [
+                            [$class: 'StringParameterValue', name: 'GIT_BRANCH', value: params.GIT_BRANCH],
+                            [$class: 'StringParameterValue', name: 'PACKAGE_NAME', value: params.PACKAGE_NAME],
+                            [$class: 'StringParameterValue', name: 'TC_VERSION', value: params.TC_VERSION],
+                            [$class: 'StringParameterValue', name: 'TEAMCENTER_MODULE', value: params.TEAMCENTER_MODULES],
+                            [$class: 'BooleanParameterValue', name: 'DEBUG_EXECUTION_MODE', value: params.DEBUG_EXECUTION_MODE],
+                            [$class: 'BooleanParameterValue', name: 'BUILD_PACKAGE', value: params.BUILD_PACKAGE], // true
+                            [$class: 'StringParameterValue', name: 'SOFTWARE_VERSION', value: SOFTWARE_VERSION],
+                            [$class: 'BooleanParameterValue', name: 'COMBINED_JOB', value: true],
+                            [$class: 'BooleanParameterValue', name: 'NOTIFY_TEAMS_CHANNEL', value: params.NOTIFY_TEAMS_CHANNEL],
+                            [$class: 'StringParameterValue', name: 'TARGET_TEAMS_CHANNELS', value: params.TARGET_TEAMS_CHANNELS],
+                            [$class: 'StringParameterValue', name: 'SYSTEM_DOWN_MESSAGE', value: params.SYSTEM_DOWN_MESSAGE],
+                            [$class: 'StringParameterValue', name: 'SYSTEM_UP_MESSAGE', value: params.SYSTEM_UP_MESSAGE]
+
+                        ]
+
+                        build_status = true
+                        def build_exec_status = build job: 'DITA_Build', parameters: jobParameters
+                        
+                        if (build_exec_status.getResult() == 'SUCCESS') {
+                            build_status = true                                        
+                        } else {
+                            build_status = false
+                            error 'Build Failed'
+                        }
+                    }
+                }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Build Job Done successfully ]========]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Build Job  failed ]======== ]"   
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])                            
+                }
+            }
+        }
+        stage ('Call Deploy Job') {
+            failFast true
+            agent {
+                label 'demchdc47xx'
+            }
+            when {  expression { build_status == true }  }
+            steps {
+                
+                script {
+                    echo '[DEBUG INFO] Call Deploy Job'
+
+                    CMN_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'CMN' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+                    
+                    BU_PACKAGE_NAME = SOFTWARE_VERSION + '_' + 'RI' + '_' +  params.GIT_BRANCH + '_' + params.PACKAGE_NAME
+                    
+
+                    echo "TARGET_ENVIRONMENT : ${params.TARGET_ENVIRONMENT}"
+                    echo "DEPLOYMENT_OPTION : ${params.DEPLOYMENT_OPTION}"
+                    echo "CMN_WEEKLY_PACKAGE_NAME : " + CMN_PACKAGE_NAME 
+                    echo "RI_WEEKLY_PACKAGE_NAME : " + BU_PACKAGE_NAME
+                    echo "START_DEPLOY_FROM_BEGINNING : ${params.START_DEPLOY_FROM_BEGINNING}"
+
+                    if ((env.BUILD_PACKAGE.equals("true")) && (build_status == true)) {
+                        def jobParameters = [
+                                [$class: 'StringParameterValue', name: 'TARGET_ENVIRONMENT', value: params.TARGET_ENVIRONMENT],
+                                [$class: 'StringParameterValue', name: 'DEPLOYMENT_OPTION', value: params.DEPLOYMENT_OPTION],
+                                [$class: 'StringParameterValue', name: 'CMN_PACKAGE_NAME', value: CMN_PACKAGE_NAME],
+                                [$class: 'StringParameterValue', name: 'BU_PACKAGE_NAME', value: BU_PACKAGE_NAME],
+                                [$class: 'BooleanParameterValue', name: 'START_DEPLOY_FROM_BEGINNING', value: params.START_DEPLOY_FROM_BEGINNING],
+                                [$class: 'BooleanParameterValue', name: 'COMBINED_JOB', value: true],
+                                [$class: 'BooleanParameterValue', name: 'NOTIFY_TEAMS_CHANNEL', value: params.NOTIFY_TEAMS_CHANNEL],
+                                [$class: 'StringParameterValue', name: 'TARGET_TEAMS_CHANNELS', value: params.TARGET_TEAMS_CHANNELS],
+                                [$class: 'StringParameterValue', name: 'SYSTEM_DOWN_MESSAGE', value: params.SYSTEM_DOWN_MESSAGE],
+                                [$class: 'StringParameterValue', name: 'SYSTEM_UP_MESSAGE', value: params.SYSTEM_UP_MESSAGE]
+                            ]
+
+                        deploy_status = true
+                        def deploy_exec_status = build job: 'DITA_Deploy', parameters: jobParameters
+                        if (deploy_exec_status.getResult() == 'SUCCESS') {
+                            deploy_status = true
+                        } else {
+                            deploy_status = false
+                            error 'Deploy Failed'
+                        }                                    
+                    }                                
+                }
+            }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Deploy Job successfully ]========]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Deploy Job  failed ]======== ]"   
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])                       
+                }
+            }
+        }
+        stage ('Call Test Automation Job') {
+            failFast true
+            agent {
+                label 'demchdc47xx'
+            }
+            when {  expression { build_status == true && deploy_status == true }  }                        
+            steps {
+                script {
+                    echo '[DEBUG INFO] Call Test Automation Job'
+                    if ((env.BUILD_PACKAGE.equals("true")) && (deploy_status == true)) {
+                        try {
+                            
+                            def jobParameters = [
+                            
+                            ]
+                        
+                            def test_exec_status = build job: "DITA_TA.Jobs/internal_nightly_builds/nightly_builds_${params.TARGET_ENVIRONMENT}", parameters: jobParameters
+                            if (test_exec_status.getResult() == 'SUCCESS') {
+                                test_status = true
+                            } else {
+                                test_status = false                           
+                            }
+
+                        }
+                        catch (Exception e) {
+                            println 'Error is ---> ' + e.getMessage()
+                            return e
+                        }
+                        
+                    }
+                    
+                }
+            }
+            post {
+                success{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Test Automation Job successfully ]========]"
+                }
+                failure{
+                    echo "[DEBUG INFO] [ ========[ DITA Call Test Automation Job  failed ]======== ]"  
+                    notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])                                                        
+                }
+            }
+        }
+                           
+        stage ('Email Notification') 
+			{
+                agent 
+				{
+                    label 'demchdc47xx'
+                }
+                when {  expression { build_status == true && deploy_status == true }  }   
+                steps 
+				{
+                    script 
+						{
+							echo '[DEBUG INFO] DITA Deploy Send Email Notification to Leads and Developers'
+						}
+				}
+				post
+					{
+					always 
+					{
+                        echo '[DEBUG INFO] DITA Deploy Send Email Notification to Leads and Developers'						
+					}  
+                    failure {
+                        echo '[DEBUG INFO] DITA Deploy Send Email Notification to Leads and Developers'	
+                        notifications([parametersConfig: parametersConfig, 'subject': "${params.TARGET_ENVIRONMENT} - ${env.STAGE_NAME} FAILED- #${env.BUILD_NUMBER}", profile: 'SystemAdmin'])
+                    }  
+				}  
+                
+            }
+    }
+}

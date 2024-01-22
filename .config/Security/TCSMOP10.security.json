@@ -1,0 +1,158 @@
+{
+    "fnd0_tcAdminPassword": "infodba",
+    "fnd0_corporateserver_osUserPassword": "nopassword",
+    "fnd0_oracleDBUserPassword": "WQ0BDOZT22.ipuwrmqm+i=5847",
+	"aws2_machinePassword": "m+6B8oT*tF#4%5XaWs2?=7Nxp/",
+    "fnd0_fms_keyStorePassword": [
+        {
+            "machineName": "tcsmop10sgsgpvol01.tcsmop.siemens.com",
+            "value": "7_APf3Ln5XQ_doD"
+        },
+        {
+            "machineName": "tcsmop10mifv01.tcsmop.siemens.com",
+            "value": "_kdvJU4b7Bm4Nj-"
+        },
+        {
+            "machineName": "TCSMOP10APP02.TCSMOP.SIEMENS.COM",
+            "value": "ML6UuCS65+KbI-f"
+        },
+        {
+            "machineName": "tcsmop10app01.tcsmop.siemens.com",
+            "value": "BA78sbrGvck::7y"
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "HV3C_CoK7PL9a_L"
+        },
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "/sYy5AV5Ad+F9bG"
+        },
+        {
+            "machineName": "tcsmop10v02.tcsmop.siemens.com",
+            "value": "k+86Jzv_yRhF5Vo"
+        },
+        {
+            "machineName": "tcsmop10v01.tcsmop.siemens.com",
+            "value": "c9mh3h:o:Yzma6f"
+        }
+    ],
+    "fnd0_fsc_machinePassword": [
+        {
+            "machineName": "tcsmop10sgsgpvol01.tcsmop.siemens.com",
+            "value": "nopassword"       
+        },
+        {
+            "machineName": "tcsmop10mifv01.tcsmop.siemens.com",
+            "value": "nopassword"       
+        },
+        {
+            "machineName": "TCSMOP10APP02.TCSMOP.SIEMENS.COM",
+            "value": "nopassword"       
+        },
+        {
+            "machineName": "tcsmop10app01.tcsmop.siemens.com",
+            "value": "nopassword"
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "nopassword"
+        },
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "nopassword"
+        },
+        {
+            "machineName": "tcsmop10v01.tcsmop.siemens.com",
+            "value": "nopassword"
+        },
+        {
+            "machineName": "tcsmop10v02.tcsmop.siemens.com",
+            "value": "nopassword"
+        }      
+    ],
+    "fnd0_j2ee_tcwebtiertrustStorePassword": [
+        {
+            "machineName": "tcsmop10app01.tcsmop.siemens.com",
+            "value": "nopassword"    
+        },
+        {
+            "machineName": "TCSMOP10APP02.TCSMOP.SIEMENS.COM",
+            "value": "nopassword"    
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "nopassword"    
+        },
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "nopassword"    
+        }
+    ],
+    "fnd0_dispatcherclientProxyPassword": [
+        {
+            "machineName": "tcsmop10miftstk01.tcsmop.siemens.com",
+            "value": "dcproxy"    
+        },
+        {
+            "machineName": "tcsmop10tstk01.tcsmop.siemens.com",
+            "value": "dcproxy"    
+        }
+    ],
+
+    "fnd0_serverManagerOracleDBUserPassword": "AB79I2REAW.oacoypwa+i=4421",
+    "fnd0_microservice_keyStorePassword": "tcsmop10_master",
+    "aws2_indexingEngineUserPassword": "solr_admin",
+    "fnd0_TcPassword4TcIF": [
+        {
+            "machineName": "tcsmop10app01.tcsmop.siemens.com",
+            "value": "infodba"
+        },
+        {
+            "machineName": "TCSMOP10APP02.TCSMOP.SIEMENS.COM",
+            "value": "infodba"
+        }
+    ],
+    "fnd0_TcIFUserPassword": [
+        {
+            "machineName": "tcsmop10app01.tcsmop.siemens.com",
+            "value": "admin"
+        },
+        {
+            "machineName": "TCSMOP10APP02.TCSMOP.SIEMENS.COM",
+            "value": "admin"
+        }
+    ],
+    "fnd0_tcSSAdminPassword": "nopassword",
+    "fnd0_serverMgrConsolekeyManagerPassword": [
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "/sYy5AV5Ad+F9bG"
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "HV3C_CoK7PL9a_L"
+        }
+    ],
+    "fnd0_serverMgrConsolekeyStorePassword": [
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "/sYy5AV5Ad+F9bG"
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "HV3C_CoK7PL9a_L"
+        }
+    ],
+    "fnd0_embeddedLDAPKeyStorePassword": [
+        {
+            "machineName": "demchdc4dxx.dc4ca.siemens.de",
+            "value": "nopassword"
+        },
+        {
+            "machineName": "demchdc4dwx.dc4ca.siemens.de",
+            "value": "nopassword"
+        }
+    ],
+    "MachineUserPassword": "nopassword"
+}

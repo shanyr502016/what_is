@@ -1,0 +1,12 @@
+CMN_R1:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/SMO_CMN_R1.git
+CMN_R2:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/SMO_CMN_R2.git
+RI_R1:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/RI_R1.git
+RI_R2:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/RI_R2.git
+RS_R1:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/RS_R2.git
+RS_R2:
+  - git@code.siemens.com:a-pe/emea/siemens-mobility/plm_mo_ri/RS_R2.git
